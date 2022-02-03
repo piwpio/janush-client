@@ -22,8 +22,13 @@ export class NameComponent {
     return false;
   }
 
-  tableSit(): boolean {
-    this.socketService.emitTableSit();
+  tableSitTo(): boolean {
+    this.socketService.emitTableSitTo()
+    return false;
+  }
+
+  tableStandFrom(): boolean {
+    this.socketService.emitTableStandFrom();
     return false;
   }
 

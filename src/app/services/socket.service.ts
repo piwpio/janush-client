@@ -26,8 +26,12 @@ export class SocketService {
     this.emit(GATEWAY.PLAYER_REGISTER, payload);
   }
 
-  emitTableSit(): void {
-    this.emit(GATEWAY.TABLE_SIT, {});
+  emitTableSitTo(): void {
+    this.emit(GATEWAY.TABLE_SIT_TO, {});
+  }
+
+  emitTableStandFrom(): void {
+    this.emit(GATEWAY.TABLE_STAND_FROM, {});
   }
 
   emitChairPlayerIsReady(payload: PayloadChairPlayerIsReady): void {
