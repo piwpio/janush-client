@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
-import { DATA_KEY, DATA_PARAM } from "../../models/data.model";
 import { SocketService } from "../../services/socket.service";
+import { PARAM } from "../../models/param.model";
 
 @Component({
   selector: 'name-component',
@@ -14,7 +14,9 @@ export class NameComponent {
   }
 
   submitName(userName: string) {
-    this.socketService.emit(DATA_KEY.REGISTER_PLAYER, { [DATA_PARAM.NAME]: userName });
+    this.socketService.emitRegisterPlayer({
+      [PARAM.NAME]:userName }
+    );
     return false;
   }
 }

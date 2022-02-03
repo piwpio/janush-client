@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Socket } from "ngx-socket-io";
-import { DATA_KEY, DataRModel, DataSType, DMPlayerChange } from "../models/data.model";
+import { GATEWAY, PayloadRegisterPlayer } from "../models/gateway.model";
 
 @Injectable()
 export class SocketService {
@@ -9,12 +9,16 @@ export class SocketService {
   ) {}
 
   startListening(): void {
-    this.socket.fromEvent<DataRModel<DMPlayerChange>>(DATA_KEY.PLAYER_CHANGE).subscribe(data => {
+    this.socket.fromEvent(GATEWAY.GAME).subscribe(data => {
       console.log(data);
     });
   }
 
-  emit(dataKey: DATA_KEY, data: DataSType): void {
+  private emit(dataKey: GATEWAY, data: any): void {
     this.socket.emit(dataKey, data);
+  }
+
+  emitRegisterPlayer(payload: PayloadRegisterPlayer): void {
+    this.emit(GATEWAY.REGISTER_PLAYER, payload);
   }
 }
