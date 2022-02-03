@@ -7,16 +7,31 @@ import { PARAM } from "../../models/param.model";
   templateUrl: './name.component.html'
 })
 export class NameComponent {
+  private isPlayerReady = false;
+
   constructor(
     private socketService: SocketService
   ) {
     this.socketService.startListening();
   }
 
-  submitName(userName: string) {
-    this.socketService.emitRegisterPlayer({
-      [PARAM.NAME]:userName }
-    );
+  registerPlayer(playerName: string): boolean {
+    this.socketService.emitPlayerRegister({
+      [PARAM.PLAYER_NAME]: playerName
+    });
+    return false;
+  }
+
+  tableSit(): boolean {
+    this.socketService.emitTableSit();
+    return false;
+  }
+
+  tablePlayerIsReady(): boolean {
+    this.isPlayerReady = !this.isPlayerReady;
+    this.socketService.emitChairPlayerIsReady({
+      [PARAM.CHAIR_PLAYER_IS_READY]: this.isPlayerReady
+    });
     return false;
   }
 }

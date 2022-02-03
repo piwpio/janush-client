@@ -2,9 +2,16 @@ import { PARAM } from "./param.model";
 
 export enum GATEWAY {
   GAME = 'game',
-  REGISTER_PLAYER = 'register_player'
+  EXCEPTION = 'exception',
+  PLAYER_REGISTER = 'player_register',
+  TABLE_SIT = 'table_sit',
+  CHAIR_PLAYER_IS_READY = 'chair_player_is_ready',
 }
 
-export interface PayloadRegisterPlayer {
-  [PARAM.NAME]: string
+export interface PayloadPlayerRegister {
+  [PARAM.PLAYER_NAME]: string
+}
+
+export interface PayloadChairPlayerIsReady {
+  [PARAM.CHAIR_PLAYER_IS_READY]: boolean
 }

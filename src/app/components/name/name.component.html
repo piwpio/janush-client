@@ -1,4 +1,10 @@
 <div>Podaj twojom nazwe</div>
-<form (submit)="submitName(nameInput.value)">
+<form (submit)="registerPlayer(nameInput.value)">
   <input #nameInput type="text">
 </form>
+<div>
+  <button (click)="tableSit()">TABLE SIT</button>
+</div>
+<div>
+  <button (click)="tablePlayerIsReady()">PLAYER IS READY</button>
+</div>
