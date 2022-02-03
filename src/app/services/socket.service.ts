@@ -9,8 +9,9 @@ export class SocketService {
   ) {}
 
   startListening(): void {
-    this.socket.fromEvent(GATEWAY.GAME).subscribe(data => {
-      console.log(data);
+    this.socket.fromEvent(GATEWAY.MAIN).subscribe(data => {
+      const str = JSON.stringify(data, null, 2);
+      console.log(str);
     });
     this.socket.fromEvent(GATEWAY.EXCEPTION).subscribe(data => {
       console.error(data);
