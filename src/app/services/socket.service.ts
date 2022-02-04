@@ -35,6 +35,6 @@ export class SocketService {
   }
 
   emitChairPlayerIsReady(payload: PayloadChairPlayerIsReady): void {
-    this.emit(GATEWAY.CHAIR_PLAYER_IS_READY, payload);
+    this.emit(GATEWAY.CHAIR_PLAYER_SET_READY, payload);
   }
 }
