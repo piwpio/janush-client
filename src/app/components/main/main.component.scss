@@ -1,0 +1,55 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+}
+
+#main-container {
+  display: flex;
+  position: relative;
+  width: 1000px;
+  height: 600px;
+
+  #left-container {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    #chairs-container {
+      background-color: lightcoral;
+      width: 100%;
+      height: 60px;
+    }
+
+    #game-container {
+      background-color: lightgoldenrodyellow;
+      flex: 1;
+      width: 100%;
+    }
+  }
+
+  #right-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    #buttons-info-container {
+      background-color: lightblue;
+      width: 100%;
+      max-height: 60px;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    #chat-container {
+      background-color: lightpink;
+      flex: 1;
+      width: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  }
+}

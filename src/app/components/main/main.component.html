@@ -1,0 +1,24 @@
+<name-component
+  *ngIf="!isPlayerRegistered"
+  (onRegistered)="isPlayerRegistered = $event"
+></name-component>
+
+<div id="main-container">
+  <div id="left-container">
+    <div id="chairs-container"></div>
+    <div id="game-container"></div>
+  </div>
+  <div id="right-container">
+    <div id="buttons-info-container">
+    </div>
+    <div id="chat-container"></div>
+  </div>
+</div>
+
+<!--<div>-->
+<!--  <button (click)="tableSitTo()">TABLE SIT TO</button>-->
+<!--  <button (click)="tableStandFrom()">TABLE STAND FROM</button>-->
+<!--</div>-->
+<!--<div>-->
+<!--  <button (click)="tablePlayerIsReady()">PLAYER IS READY</button>-->
+<!--</div>-->

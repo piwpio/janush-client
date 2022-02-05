@@ -1,0 +1,37 @@
+:host {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  color: white;
+  background-color: black;
+
+  input {
+    font-size: inherit;
+    background-color: black;
+    border: 1px solid white;
+    caret-color: white;
+    color: white;
+    outline: none;
+    border-radius: 5px;
+    padding: 20px;
+
+    &::placeholder {
+      color: white;
+      opacity: 1;
+    }
+    &:-ms-input-placeholder {
+      color: white;
+    }
+    &::-ms-input-placeholder {
+      color: white;
+    }
+  }
+}

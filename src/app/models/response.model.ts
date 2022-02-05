@@ -1,6 +1,6 @@
 import { DATA_TYPE, PARAM } from "./param.model";
-import { ChairId } from "./types.model";
 import { PlayerData, PlayerFullData } from "./player.model";
+import { GENERAL_ID } from "./types.model";
 
 export type ResponseType = ResponseModel[];
 export type ResponseModel =
@@ -8,7 +8,17 @@ export type ResponseModel =
   RMPlayerRegister | RMPlayerUnRegister| RMPlayerChange |
   RMTableChange |
   RMChairChange |
-  RMGameStart | RMGameEnd;
+  RMGameCountdown | RMGameStart | RMGameUpdate | RMGameEnd | RMGameMepleCollect |
+  RMepleChange;
+
+export type ResponseDataType = ResponseDataModel[];
+export type ResponseDataModel =
+  RMInitData[PARAM.DATA] |
+  RMPlayerRegister[PARAM.DATA] | RMPlayerUnRegister[PARAM.DATA]| RMPlayerChange[PARAM.DATA] |
+  RMTableChange[PARAM.DATA] |
+  RMChairChange[PARAM.DATA] |
+  RMGameCountdown[PARAM.DATA] | RMGameStart[PARAM.DATA] | RMGameUpdate[PARAM.DATA] | RMGameEnd[PARAM.DATA] | RMGameMepleCollect[PARAM.DATA] |
+  RMepleChange[PARAM.DATA];
 
 // RESPONSE MODELS
 export interface RMInitData {
@@ -45,24 +55,56 @@ export interface RMTableChange {
 export interface RMChairChange {
   [PARAM.DATA_TYPE]: DATA_TYPE.CHAIR_CHANGE;
   [PARAM.DATA]: {
-    [PARAM.CHAIR_ID]: ChairId;
+    [PARAM.CHAIR_ID]: GENERAL_ID;
     [PARAM.CHAIR_PLAYER]?: PlayerData;
     [PARAM.CHAIR_PLAYER_IS_READY]?: boolean;
+    [PARAM.CHAIR_POINTS]?: number,
+    [PARAM.CHAIR_WINSTREAK]?: number
+  };
+}
+
+export interface RMGameCountdown {
+  [PARAM.DATA_TYPE]: DATA_TYPE.GAME_COUNTDOWN;
+  [PARAM.DATA]: {
+    [PARAM.GAME_START_TS]: number;
+    [PARAM.GAME_FIELDS]: number[];
   };
 }
 
 export interface RMGameStart {
   [PARAM.DATA_TYPE]: DATA_TYPE.GAME_START;
+  [PARAM.DATA]: {};
+}
+
+export interface RMGameUpdate {
+  [PARAM.DATA_TYPE]: DATA_TYPE.GAME_UPDATE;
   [PARAM.DATA]: {
-    [PARAM.GAME_START_TS]: number;
     [PARAM.GAME_ROUND]: number;
+    [PARAM.GAME_ROUND_ITEMS_IDS]: number[];
+    [PARAM.GAME_NEXT_UPDATE_TS]: number[];
   };
 }
 
 export interface RMGameEnd {
   [PARAM.DATA_TYPE]: DATA_TYPE.GAME_END;
   [PARAM.DATA]: {
-    [PARAM.GAME_WINNER]: PlayerData
+    [PARAM.GAME_WINNER]: PlayerData;
+  };
+}
+
+export interface RMGameMepleCollect {
+  [PARAM.DATA_TYPE]: DATA_TYPE.GAME_MEPLE_COLLECT;
+  [PARAM.DATA]: {
+    [PARAM.GAME_ROUND_ITEMS_IDS]: number[];
+  };
+}
+
+export interface RMepleChange {
+  [PARAM.DATA_TYPE]: DATA_TYPE.MEPLE_CHANGE;
+  [PARAM.DATA]: {
+    [PARAM.MEPLE_ID]: GENERAL_ID;
+    [PARAM.MEPLE_FIELD_INDEX]: number;
+    [PARAM.MEPLE_POINTS]: number;
   };
 }
 

@@ -1,4 +1,11 @@
-import { CHAIR_ID } from "./chair.model";
-
 export type PlayerId = string;
-export type ChairId = CHAIR_ID;
+
+export enum GENERAL_ID {
+  ID1,
+  ID2
+}
+
+export enum MOVE_DIRECTION {
+  DESC,
+  ASC
+}
