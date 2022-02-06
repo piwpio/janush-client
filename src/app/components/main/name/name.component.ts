@@ -1,32 +1,37 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from "@angular/core";
 import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";  0
 import { RMPlayerRegister } from "../../../models/response.model";
 import { PlayerFullData } from "../../../models/player.model";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'name-component',
   templateUrl: './name.component.html',
   styleUrls: ['./name.component.scss']
 })
-export class NameComponent implements OnInit {
+export class NameComponent implements OnInit, OnDestroy {
   @Output() onRegistered: EventEmitter<boolean> = new EventEmitter<boolean>()
+
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
-    this.socketService.startListeningOn<PlayerFullData>(DATA_TYPE.PLAYER_REGISTER).subscribe(data => {
+    const registerSubscription = this.socketService.startListeningOn<PlayerFullData>(DATA_TYPE.PLAYER_REGISTER).subscribe(data => {
       data.forEach((d) => {
-        if (this.socketService.socket.ioSocket.id === d[PARAM.PLAYER_ID]) {
+        if (this.socketService.getPlayerId() === d[PARAM.PLAYER_ID]) {
           this.onRegistered.emit(true)
         }
       });
     });
 
-    this.formSubmit('Janusz');
-    this.tableSitTo();
+    this.subscriptions.add(registerSubscription);
+
+    this.formSubmit(Math.random().toString());
+    // this.tableSitTo();
   }
 
   formSubmit(playerName: string): boolean {
@@ -36,21 +41,13 @@ export class NameComponent implements OnInit {
     return false;
   }
 
+  // TODO DEBUG
   tableSitTo(): boolean {
     this.socketService.emitTableSitTo()
     return false;
   }
-  //
-  // tableStandFrom(): boolean {
-  //   this.socketService.emitTableStandFrom();
-  //   return false;
-  // }
-  //
-  // tablePlayerIsReady(): boolean {
-  //   this.isPlayerReady = !this.isPlayerReady;
-  //   this.socketService.emitChairPlayerIsReady({
-  //     [PARAM.CHAIR_PLAYER_IS_READY]: this.isPlayerReady
-  //   });
-  //   return false;
-  // }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 }

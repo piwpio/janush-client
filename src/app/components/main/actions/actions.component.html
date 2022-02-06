@@ -1,18 +1,9 @@
-<div *ngIf="playerName" class="player-container">
-  <div class="player-name-container">
-    <div class="name">{{ playerName }}</div>
-    <div class="player-info-container">
-      w: {{ playerWin }},
-      l: {{ playerLost }},
-      s: {{ playerWinstreak }},
-      ms: {{ playerMaxWinstreak }}
-    </div>
-  </div>
-  <div class="player-is-ready-container">
-    <div *ngIf="playerIsReady">R</div>
-    <div *ngIf="!playerIsReady">X</div>
-  </div>
+<div *ngIf="isPlayerOnChair" class="actions-container">
+  <button mat-flat-button color="primary" (click)="toggleReady()">{{ isPlayerReady ? 'NOT READY' : 'READY' }}</button>
+  <button mat-flat-button (click)="tableStandFrom()">STAND UP</button>
 </div>
-<div *ngIf="!playerName" class="no-payer-container name">
-  No player
+<div *ngIf="!isPlayerOnChair" class="no-actions-container">
+  <button *ngIf="isAnyChairFree" mat-flat-button color="primary" (click)="tableSitTo()">SIT ON CHAIR</button>
+  <button *ngIf="!isUserInQueue && !isAnyChairFree" mat-flat-button color="primary" (click)="toggleReady()">SIT IN QUEUE</button>
+  <button *ngIf="isUserInQueue && !isAnyChairFree" mat-flat-button color="primary" (click)="toggleReady()">STAND FROM QUEUE</button>
 </div>

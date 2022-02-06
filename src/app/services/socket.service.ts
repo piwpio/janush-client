@@ -2,14 +2,19 @@ import { Injectable } from "@angular/core";
 import { Socket } from "ngx-socket-io";
 import { GATEWAY, PayloadChairPlayerIsReady, PayloadPlayerRegister } from "../models/gateway.model";
 import { map, filter, Observable } from "rxjs";
-import { ResponseDataModel, ResponseDataType, ResponseModel, ResponseType } from "../models/response.model";
+import { ResponseType } from "../models/response.model";
 import { DATA_TYPE, PARAM } from "../models/param.model";
+import { PlayerId } from "../models/types.model";
 
 @Injectable()
 export class SocketService {
   constructor(
-    public socket: Socket
+    private socket: Socket
   ) {}
+
+  getPlayerId(): PlayerId {
+    return this.socket.ioSocket.id;
+  }
 
   startListeningOn<T>(dataType: DATA_TYPE): Observable<T[]> {
     return this.socket.fromEvent<ResponseType>(GATEWAY.MAIN).pipe(

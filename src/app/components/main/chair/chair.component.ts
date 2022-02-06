@@ -13,7 +13,7 @@ import { Subscription } from "rxjs";
 export class ChairComponent implements OnInit, OnDestroy {
   @Input() chairId: GENERAL_ID;
 
-  private subscriptions = new Subscription()
+  private subscriptions: Subscription = new Subscription()
 
   public playerName: string;
   public playerWin: number;
@@ -29,25 +29,25 @@ export class ChairComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscriptions.add(
-      this.socketService.startListeningOn<RMChairChangeData>(DATA_TYPE.CHAIR_CHANGE).subscribe(data => {
-        data.forEach(d => {
-          if (d[PARAM.CHAIR_ID] !== this.chairId) return;
-          if (!d[PARAM.CHAIR_PLAYER]) {
-            this.resetChair();
-            return;
-          }
+    const chairSubscription = this.socketService.startListeningOn<RMChairChangeData>(DATA_TYPE.CHAIR_CHANGE).subscribe(data => {
+      data.forEach(d => {
+        if (d[PARAM.CHAIR_ID] !== this.chairId) return;
+        if (!d[PARAM.CHAIR_PLAYER]) {
+          this.resetChair();
+          return;
+        }
 
-          const playerData = d[PARAM.CHAIR_PLAYER];
-          this.playerName = playerData[PARAM.PLAYER_NAME];
-          this.playerWin = playerData[PARAM.PLAYER_WIN_COUNTER];
-          this.playerLost = playerData[PARAM.PLAYER_LOST_COUNTER];
-          this.playerWinstreak = playerData[PARAM.PLAYER_WINSTREAK];
-          this.playerMaxWinstreak = playerData[PARAM.PLAYER_MAX_WINSTREAK];
-          this.playerIsReady = d[PARAM.CHAIR_PLAYER_IS_READY];
-        });
-      })
-    );
+        const playerData = d[PARAM.CHAIR_PLAYER];
+        this.playerName = playerData[PARAM.PLAYER_NAME];
+        this.playerWin = playerData[PARAM.PLAYER_WIN_COUNTER];
+        this.playerLost = playerData[PARAM.PLAYER_LOST_COUNTER];
+        this.playerWinstreak = playerData[PARAM.PLAYER_WINSTREAK];
+        this.playerMaxWinstreak = playerData[PARAM.PLAYER_MAX_WINSTREAK];
+        this.playerIsReady = d[PARAM.CHAIR_PLAYER_IS_READY];
+      });
+    });
+
+    this.subscriptions.add(chairSubscription);
   }
 
   private resetChair(): void {
