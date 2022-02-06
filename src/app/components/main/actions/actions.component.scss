@@ -7,15 +7,14 @@
 
 button {
   min-width:140px;
+  margin-right: 10px;
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .actions-container {
-  button {
-    margin-right: 10px;
-    &:last-of-type {
-      margin-right: 0;
-    }
-  }
+
 }
 
 .no-actions-container {

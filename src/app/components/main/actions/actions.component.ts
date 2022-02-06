@@ -18,7 +18,8 @@ export class ActionsComponent implements OnInit, OnDestroy {
   public isPlayerOnChair: boolean = false;
   public isPlayerReady: boolean = false;
   public isAnyChairFree: boolean = false;
-  public isUserInQueue: boolean = false;
+  public isPlayerInQueue: boolean = false;
+  public playerQueuePosition: number;
 
   constructor(
     private socketService: SocketService
@@ -51,10 +52,12 @@ export class ActionsComponent implements OnInit, OnDestroy {
     const tableSubscription = this.socketService.startListeningOn<RMTableChangeData>(DATA_TYPE.TABLE_CHANGE).subscribe(data => {
       data.forEach(d => {
         if (this.getPlayerChair()) {
-          this.isUserInQueue = false;
+          this.isPlayerInQueue = false;
         } else {
-          this.isUserInQueue =
-            d[PARAM.TABLE_QUEUE].some(queuePlayer => queuePlayer[PARAM.PLAYER_ID] === this.socketService.getPlayerId());
+          const playerQueueIndex = d[PARAM.TABLE_QUEUE]
+            .findIndex(queuePlayer => queuePlayer[PARAM.PLAYER_ID] === this.socketService.getPlayerId());
+          this.isPlayerInQueue = playerQueueIndex > -1;
+          this.playerQueuePosition = playerQueueIndex + 1;
         }
       });
     });

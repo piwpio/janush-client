@@ -4,6 +4,7 @@
 </div>
 <div *ngIf="!isPlayerOnChair" class="no-actions-container">
   <button *ngIf="isAnyChairFree" mat-flat-button color="primary" (click)="tableSitTo()">SIT ON CHAIR</button>
-  <button *ngIf="!isUserInQueue && !isAnyChairFree" mat-flat-button color="primary" (click)="toggleReady()">SIT IN QUEUE</button>
-  <button *ngIf="isUserInQueue && !isAnyChairFree" mat-flat-button color="primary" (click)="toggleReady()">STAND FROM QUEUE</button>
+  <button *ngIf="!isPlayerInQueue && !isAnyChairFree" mat-flat-button color="primary" (click)="tableSitTo()">SIT IN QUEUE</button>
+  <button *ngIf="isPlayerInQueue && !isAnyChairFree" mat-flat-button color="primary" (click)="tableStandFrom()">STAND FROM QUEUE</button>
+  <span *ngIf="playerQueuePosition">QUEUE POSITION: {{ playerQueuePosition }}</span>
 </div>
