@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";  0
 import { RMPlayerRegister } from "../../../models/response.model";
+import { PlayerFullData } from "../../../models/player.model";
 
 @Component({
   selector: 'name-component',
@@ -16,7 +17,7 @@ export class NameComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.socketService.startListeningOn<RMPlayerRegister[PARAM.DATA]>(DATA_TYPE.PLAYER_REGISTER).subscribe(data => {
+    this.socketService.startListeningOn<PlayerFullData>(DATA_TYPE.PLAYER_REGISTER).subscribe(data => {
       data.forEach((d) => {
         if (this.socketService.socket.ioSocket.id === d[PARAM.PLAYER_ID]) {
           this.onRegistered.emit(true)
@@ -25,6 +26,7 @@ export class NameComponent implements OnInit {
     });
 
     this.formSubmit('Janusz');
+    this.tableSitTo();
   }
 
   formSubmit(playerName: string): boolean {
@@ -34,10 +36,10 @@ export class NameComponent implements OnInit {
     return false;
   }
 
-  // tableSitTo(): boolean {
-  //   this.socketService.emitTableSitTo()
-  //   return false;
-  // }
+  tableSitTo(): boolean {
+    this.socketService.emitTableSitTo()
+    return false;
+  }
   //
   // tableStandFrom(): boolean {
   //   this.socketService.emitTableStandFrom();

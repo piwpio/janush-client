@@ -1,6 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: Roboto;
+  src: url(/assets/font/Roboto-Regular.ttf);
+}
 
 html, body, app-root, main-component {
+  font-family: Roboto, Arial;
   margin: 0;
   padding: 0;
   width: 100vw;

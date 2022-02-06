@@ -18,8 +18,11 @@
     flex-direction: column;
 
     #chairs-container {
+      display: flex;
       background-color: lightcoral;
       width: 100%;
+      max-width: 100%;
+      position: relative;
       height: 60px;
     }
 

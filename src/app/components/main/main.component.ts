@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { SocketService } from "../../services/socket.service";
 import { PARAM } from "../../models/param.model";
+import { GENERAL_ID } from "../../models/types.model";
 
 @Component({
   selector: 'main-component',
@@ -8,6 +9,7 @@ import { PARAM } from "../../models/param.model";
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent {
+  public GENREAL_ID = GENERAL_ID;
   public isPlayerRegistered = false;
 
   // tableSitTo(): boolean {

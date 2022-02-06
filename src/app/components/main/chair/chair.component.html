@@ -1,0 +1,18 @@
+<div *ngIf="playerName" class="player-container">
+  <div class="player-name-container">
+    <div class="name">{{ playerName }}</div>
+    <div class="player-info-container">
+      w: {{ playerWin }},
+      l: {{ playerLost }},
+      s: {{ playerWinstreak }},
+      ms: {{ playerMaxWinstreak }}
+    </div>
+  </div>
+  <div class="player-is-ready-container">
+    <div *ngIf="playerIsReady">R</div>
+    <div *ngIf="!playerIsReady">X</div>
+  </div>
+</div>
+<div *ngIf="!playerName" class="no-payer-container name">
+  No player
+</div>
