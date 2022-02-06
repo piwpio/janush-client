@@ -10,6 +10,7 @@ import { ChairComponent } from "./components/main/chair/chair.component";
 import { ActionsComponent } from "./components/main/actions/actions.component";
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from "@angular/material/button";
+import { GameComponent } from "./components/main/game/game.component";
 
 const config: SocketIoConfig = { url: 'http://192.168.0.192:8080' };
 
@@ -19,7 +20,8 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:8080' };
     MainComponent,
     NameComponent,
     ChairComponent,
-    ActionsComponent
+    ActionsComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,

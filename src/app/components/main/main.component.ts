@@ -15,6 +15,6 @@ export class MainComponent {
   constructor(
     private socketService: SocketService
   ) {
-    // this.socketService.startDebugListening();
+    this.socketService.startDebugListening();
   }
 }
