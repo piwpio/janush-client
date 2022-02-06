@@ -1,85 +1,80 @@
 :host {
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
   display: block;
+  position: relative;
 }
 
-.fields-container {
-  width: 500px;
-  height: 50px;
-  padding: 0 50px;
+.flex-container {
+  position: absolute;
   display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+$fieldSize: 60px;
+$fieldsInRow: 9;
+$boardContainerSize: $fieldSize * ($fieldsInRow + 2);
+$fieldsContainerSize: $fieldSize * $fieldsInRow;
+
+.fields-container {
+  display: flex;
+  width: $fieldsContainerSize;
+  height: $fieldSize;
+  position: absolute;
+  padding-left: $fieldSize;
+  transform-origin: ($boardContainerSize/2) ($boardContainerSize/2);
 }
 
 .field-container {
-  width: 50px;
-  height: 50px;
+  width: $fieldSize;
+  height: $fieldSize;
   display: flex;
   justify-content: center;
   align-items: end;
 
   .field {
-    width: 44px;
-    height: 44px;
+    width: 90%;
+    height: 90%;
     background-color: lightcyan;
   }
 }
 
-.fields-left-container {
-  transform-origin: center;
-  position: absolute;
-  transform: rotate(270deg);
-  top: calc(50% - 25px);
-  left: calc(-50% + 25px);
-}
-
 .fields-right-container {
-  transform-origin: center;
-  position: absolute;
   transform: rotate(90deg);
-  top: calc(50% - 25px);
-  right: calc(-50% + 25px);
 }
 
 .fields-bottom-container {
-  transform-origin: center;
-  position: absolute;
   transform: rotate(180deg);
-  top: calc(100% - 50px);
 }
 
-#back-board-container {
-  background-color: red;
-  width: 740px;
-  height: 740px;
-  position: absolute;
-  margin-left: 30px;
-  margin-top: 30px;
-
-  .fields-top-container {
-    margin-left: 70px;
-    margin-top: 14px;
-  }
-  .fields-right-container {
-    right: calc(-50% + 109px);
-  }
-  .fields-bottom-container {
-    margin-left: 70px;
-    margin-top: -14px;
-  }
-  .fields-left-container {
-    left: calc(-50% + 109px);
-  }
-
+.fields-left-container {
+  transform: rotate(270deg);
 }
 
 #board-container {
-  height: 600px;
-  width: 600px;
-  top: 100px;
-  left: 100px;
+  height: $boardContainerSize;
+  width: $boardContainerSize;
   background-color: lightsalmon;
   position: relative;
   display: inline-block;
 }
 
+$backBoardContainerSize: 800px;
+$fieldsContainerPadding: ($backBoardContainerSize - $boardContainerSize)/2 + $fieldSize;
+$fieldsContainerPadding2: ($backBoardContainerSize - $boardContainerSize)/2 - $fieldSize;
+
+#back-board-container {
+  background-color: red;
+  width: $backBoardContainerSize;
+  height: $backBoardContainerSize;
+  position: absolute;
+
+  .fields-container {
+    padding-top: $fieldsContainerPadding2;
+    padding-left: $fieldsContainerPadding;
+    transform-origin: ($backBoardContainerSize/2) ($backBoardContainerSize/2);
+  }
+}
