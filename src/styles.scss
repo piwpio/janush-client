@@ -49,3 +49,15 @@ html, body, app-root, main-component {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body {
+  @media (max-height: 800px) {
+    --backboard-size: 600px;
+    --field-size: 46px;
+  }
+  @media (min-height: 801px) {
+    --backboard-size: 800px;
+    --field-size: 60px;
+  }
+}
+

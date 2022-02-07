@@ -14,10 +14,10 @@
   align-items: center;
 }
 
-$fieldSize: 46px;
+$fieldSize: var(--field-size);
 $fieldsInRow: 9;
-$boardContainerSize: $fieldSize * ($fieldsInRow + 2);
-$fieldsContainerSize: $fieldSize * $fieldsInRow;
+$boardContainerSize: calc(#{$fieldSize} * (#{$fieldsInRow} + 2));
+$fieldsContainerSize: calc(#{$fieldSize} * #{$fieldsInRow});
 
 .fields-container {
   display: flex;
@@ -77,7 +77,7 @@ $fieldsContainerSize: $fieldSize * $fieldsInRow;
   }
 }
 
-$backBoardContainerSize: 600px;
+$backBoardContainerSize: var(--backboard-size);
 $fieldsContainerPadding: calc((#{$backBoardContainerSize} - #{$boardContainerSize})/2 + #{$fieldSize});
 $fieldsContainerPadding2: calc((#{$backBoardContainerSize} - #{$boardContainerSize})/2 - #{$fieldSize});
 
@@ -98,8 +98,8 @@ $fieldsContainerPadding2: calc((#{$backBoardContainerSize} - #{$boardContainerSi
   flex-direction: column;
 
   .round-item {
-    width: $fieldSize * 2;
-    height: $fieldSize * 2;
+    width: calc(#{$fieldSize} * 2);
+    height: calc(#{$fieldSize} * 2);
     background-repeat: no-repeat;
     background-size: contain;
     background-color: yellowgreen;
@@ -116,8 +116,8 @@ $fieldsContainerPadding2: calc((#{$backBoardContainerSize} - #{$boardContainerSi
   }
   .power-item-container {
     .round-item {
-      width: $fieldSize * 3;
-      height: $fieldSize * 3;
+      width: calc(#{$fieldSize} * 2);
+      height: calc(#{$fieldSize} * 2);
       background-color: lightgray;
     }
   }

@@ -8,11 +8,11 @@
 #main-container {
   display: flex;
   position: relative;
-  width: 1000px;
-  height: 660px;
+  width: calc(var(--backboard-size) + 300px);
+  height: calc(var(--backboard-size) + 60px);
 
   #left-container {
-    width: 600px;
+    width: var(--backboard-size);
     height: 100%;
     display: flex;
     flex-direction: column;
