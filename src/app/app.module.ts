@@ -11,6 +11,8 @@ import { ActionsComponent } from "./components/main/actions/actions.component";
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from "@angular/material/button";
 import { GameComponent } from "./components/main/game/game.component";
+import { EndGameModalComponent } from "./components/main/end-game-modal/end-game-modal.component";
+import { MatDialogModule } from "@angular/material/dialog";
 
 const config: SocketIoConfig = { url: 'http://192.168.0.192:8080' };
 
@@ -21,14 +23,16 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:8080' };
     NameComponent,
     ChairComponent,
     ActionsComponent,
-    GameComponent
+    GameComponent,
+    EndGameModalComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SocketIoModule.forRoot(config),
     NoopAnimationsModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDialogModule
   ],
   providers: [SocketService],
   bootstrap: [AppComponent]

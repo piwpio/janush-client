@@ -2,13 +2,15 @@ import { Component, ElementRef, HostListener, OnDestroy, OnInit } from "@angular
 import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";
 import {
-  RMepleChangeData,
+  RMepleChangeData, RMGameEndData,
   RMGameInitData,
   RMGameMepleCollectData,
   RMGameUpdateData
 } from "../../../models/response.model";
 import { Subscription } from "rxjs";
 import { MOVE_DIRECTION } from "../../../models/types.model";
+import { EndGameModalComponent } from "../end-game-modal/end-game-modal.component";
+import { MatDialog } from "@angular/material/dialog";
 
 enum KEYS {
   ARROW_LEFT = 'ArrowLeft',
@@ -39,7 +41,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
   constructor(
     private el: ElementRef,
-    private socketService: SocketService
+    private socketService: SocketService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +75,10 @@ export class GameComponent implements OnInit, OnDestroy {
       });
     });
 
+    const gameEndSubscription = this.socketService.startListeningOn<RMGameEndData>(DATA_TYPE.GAME_END).subscribe(data => {
+        this.openGameEndModal(data[0]);
+    });
+
     const mepleChangeSubscription = this.socketService.startListeningOn<RMepleChangeData>(DATA_TYPE.MEPLE_CHANGE).subscribe(data => {
       data.forEach(d => {
         this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage = 'none';
@@ -84,11 +91,11 @@ export class GameComponent implements OnInit, OnDestroy {
     this.subscriptions.add(gameSubscription);
     this.subscriptions.add(gameChangeSubscription);
     this.subscriptions.add(gameMepleCollectSubscription);
+    this.subscriptions.add(gameEndSubscription);
     this.subscriptions.add(mepleChangeSubscription);
   }
 
   private fillRoundItems(roundItems: RMGameUpdateData[PARAM.GAME_ROUND_ITEMS]): void {
-    console.log(roundItems);
     this.roundItems.forEach((item: HTMLElement, index: number) => {
       item.style.backgroundImage = `url("./assets/graphics/${Math.abs(roundItems[index])}.png")`;
       if (roundItems[index] < 0) {
@@ -103,6 +110,13 @@ export class GameComponent implements OnInit, OnDestroy {
     this.backBoardFields.forEach((field: HTMLElement, index: number) => {
       field.style.backgroundImage = `url("./assets/graphics/${fields[index]}.png")`;
     });
+  }
+
+  private openGameEndModal(modalData: RMGameEndData): void {
+    console.log(modalData);
+    if (!modalData[PARAM.GAME_WINNER] || !modalData[PARAM.GAME_LOSER]) return;
+
+    this.dialog.open(EndGameModalComponent, { data: modalData });
   }
 
   @HostListener('window:keyup', ['$event'])

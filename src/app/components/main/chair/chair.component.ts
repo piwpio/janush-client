@@ -1,7 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";
-import { RMChairChangeData, RMepleChangeData, RMGameEnd, RMGameInitData } from "../../../models/response.model";
+import {
+  RMChairChangeData,
+  RMepleChangeData,
+  RMGameEndData,
+  RMGameInitData
+} from "../../../models/response.model";
 import { GENERAL_ID } from "../../../models/types.model";
 import { Subscription } from "rxjs";
 
@@ -63,7 +68,7 @@ export class ChairComponent implements OnInit, OnDestroy {
       });
     });
 
-    const gameEndSubscription = this.socketService.startListeningOn<RMGameEnd>(DATA_TYPE.GAME_END).subscribe(data => {
+    const gameEndSubscription = this.socketService.startListeningOn<RMGameEndData>(DATA_TYPE.GAME_END).subscribe(data => {
       data.forEach(() => {
         this.isGameOn = false;
       });
