@@ -22,6 +22,7 @@ enum KEYS {
   UPPER_A = 'A',
   UPPER_D = 'D',
   UPPER_S = 'S',
+  SPACEBAR = ' ',
 }
 
 @Component({
@@ -96,6 +97,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private fillRoundItems(roundItems: RMGameUpdateData[PARAM.GAME_ROUND_ITEMS]): void {
+    roundItems
     this.roundItems.forEach((item: HTMLElement, index: number) => {
       item.style.backgroundImage = `url("./assets/graphics/${Math.abs(roundItems[index])}.png")`;
       if (roundItems[index] < 0) {
@@ -128,7 +130,11 @@ export class GameComponent implements OnInit, OnDestroy {
     } else if (event.key === KEYS.ARROW_RIGHT || event.key === KEYS.LOWER_D || event.key === KEYS.UPPER_D) {
       this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
 
-    } else if (event.key === KEYS.ARROW_DOWN || event.key === KEYS.LOWER_S || event.key === KEYS.UPPER_S) {
+    } else if (event.key === KEYS.SPACEBAR ||
+      event.key === KEYS.ARROW_DOWN ||
+      event.key === KEYS.LOWER_S ||
+      event.key === KEYS.UPPER_S
+    ) {
       this.socketService.emitMepleCollect();
     }
   }

@@ -14,7 +14,7 @@
   align-items: center;
 }
 
-$fieldSize: 60px;
+$fieldSize: 46px;
 $fieldsInRow: 9;
 $boardContainerSize: $fieldSize * ($fieldsInRow + 2);
 $fieldsContainerSize: $fieldSize * $fieldsInRow;
@@ -25,7 +25,7 @@ $fieldsContainerSize: $fieldSize * $fieldsInRow;
   height: $fieldSize;
   position: absolute;
   padding-left: $fieldSize;
-  transform-origin: ($boardContainerSize/2) ($boardContainerSize/2);
+  transform-origin: calc(#{$boardContainerSize} / 2) calc(#{$boardContainerSize} / 2);
 }
 
 .field-container {
@@ -77,9 +77,9 @@ $fieldsContainerSize: $fieldSize * $fieldsInRow;
   }
 }
 
-$backBoardContainerSize: 800px;
-$fieldsContainerPadding: ($backBoardContainerSize - $boardContainerSize)/2 + $fieldSize;
-$fieldsContainerPadding2: ($backBoardContainerSize - $boardContainerSize)/2 - $fieldSize;
+$backBoardContainerSize: 600px;
+$fieldsContainerPadding: calc((#{$backBoardContainerSize} - #{$boardContainerSize})/2 + #{$fieldSize});
+$fieldsContainerPadding2: calc((#{$backBoardContainerSize} - #{$boardContainerSize})/2 - #{$fieldSize});
 
 #back-board-container {
   background-color: red;
@@ -90,7 +90,7 @@ $fieldsContainerPadding2: ($backBoardContainerSize - $boardContainerSize)/2 - $f
   .fields-container {
     padding-top: $fieldsContainerPadding2;
     padding-left: $fieldsContainerPadding;
-    transform-origin: ($backBoardContainerSize/2) ($backBoardContainerSize/2);
+    transform-origin: calc(#{$backBoardContainerSize} / 2) calc(#{$backBoardContainerSize} / 2);
   }
 }
 
