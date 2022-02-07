@@ -93,3 +93,36 @@ $fieldsContainerPadding2: ($backBoardContainerSize - $boardContainerSize)/2 - $f
     transform-origin: ($backBoardContainerSize/2) ($backBoardContainerSize/2);
   }
 }
+
+.round-items-container {
+  flex-direction: column;
+
+  .round-item {
+    width: $fieldSize * 2;
+    height: $fieldSize * 2;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: yellowgreen;
+    display: inline-block;
+    position: relative;
+
+    .disabled {
+      background-size: contain;
+      display: none;
+      width: 100%;
+      height: 100%;
+      background-image: url("../../../../assets/graphics/disabled.png");
+    }
+  }
+  .power-item-container {
+    .round-item {
+      width: $fieldSize * 3;
+      height: $fieldSize * 3;
+      background-color: lightgray;
+    }
+  }
+  .round-items-container {
+
+  }
+}
+

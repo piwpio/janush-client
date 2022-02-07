@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, ElementRef, OnDestroy, OnInit } from "@angular/core";
 import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";
 import { RMChairChangeData, RMTableChangeData } from "../../../models/response.model";
@@ -12,7 +12,7 @@ import { GENERAL_ID } from "../../../models/types.model";
 })
 export class ActionsComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription()
-
+  private buttons: HTMLElement[];
   private chairLastChange: RMChairChangeData[] = [];
 
   public isPlayerOnChair: boolean = false;
@@ -22,10 +22,13 @@ export class ActionsComponent implements OnInit, OnDestroy {
   public playerQueuePosition: number;
 
   constructor(
-    private socketService: SocketService
+    private socketService: SocketService,
+    private el: ElementRef
   ) {}
 
   ngOnInit(): void {
+    this.buttons = this.el.nativeElement.querySelectorAll('button');
+
     const chairSubscription = this.socketService.startListeningOn<RMChairChangeData>(DATA_TYPE.CHAIR_CHANGE).subscribe(data => {
       data.forEach(d => {
         this.chairLastChange[d[PARAM.CHAIR_ID]] = d;
@@ -37,15 +40,10 @@ export class ActionsComponent implements OnInit, OnDestroy {
 
         } else {
           this.isPlayerOnChair = false;
-          console.log(
-            'chair 1 free: ', !this.chairLastChange[GENERAL_ID.ID1]?.[PARAM.CHAIR_PLAYER],
-            'chair 2 free: ', !this.chairLastChange[GENERAL_ID.ID2]?.[PARAM.CHAIR_PLAYER]
-          );
           this.isAnyChairFree =
             !this.chairLastChange[GENERAL_ID.ID1]?.[PARAM.CHAIR_PLAYER] ||
             !this.chairLastChange[GENERAL_ID.ID2]?.[PARAM.CHAIR_PLAYER];
         }
-
       });
     });
 
@@ -66,17 +64,25 @@ export class ActionsComponent implements OnInit, OnDestroy {
     this.subscriptions.add(tableSubscription);
   }
 
-  tableSitTo(): boolean {
-    this.socketService.emitTableSitTo()
-    return false;
+  tableSitTo(): void {
+    this.socketService.emitTableSitTo();
+    this.blurButtons();
   }
 
   tableStandFrom(): void {
     this.socketService.emitTableStandFrom();
+    this.blurButtons();
   }
 
   toggleReady(): void {
     this.socketService.emitChairPlayerIsReady(!this.isPlayerReady);
+    this.blurButtons();
+  }
+
+  private blurButtons(): void {
+    this.buttons.forEach(button => {
+      button.blur();
+    });
   }
 
   private getPlayerChair(): RMChairChangeData {
