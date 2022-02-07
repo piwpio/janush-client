@@ -113,7 +113,6 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private openGameEndModal(modalData: RMGameEndData): void {
-    console.log(modalData);
     if (!modalData[PARAM.GAME_WINNER] || !modalData[PARAM.GAME_LOSER]) return;
 
     this.dialog.open(EndGameModalComponent, { data: modalData });
