@@ -8,7 +8,7 @@ import {
   RMGameUpdateData
 } from "../../../models/response.model";
 import { Subscription } from "rxjs";
-import { MOVE_DIRECTION } from "../../../models/types.model";
+import { GENERAL_ID, MOVE_DIRECTION } from "../../../models/types.model";
 import { EndGameModalComponent } from "../end-game-modal/end-game-modal.component";
 import { MatDialog } from "@angular/material/dialog";
 
@@ -40,7 +40,7 @@ export class GameComponent implements OnInit, OnDestroy {
   private boardFields: HTMLElement[];
   private meplesFields: HTMLElement[] = [];
   private isPlayerPlaying: boolean = false;
-  private playerNo: number;
+  private playerNo: GENERAL_ID;
   private playerLastFieldIndex: number;
   private roundItems: HTMLElement[];
   private roundItemsDisabled: HTMLElement[];
@@ -65,6 +65,7 @@ export class GameComponent implements OnInit, OnDestroy {
           player => player?.[PARAM.PLAYER_ID] === this.socketService.getPlayerId()
         );
         this.isPlayerPlaying = this.playerNo > -1;
+        this.playerLastFieldIndex = this.playerNo === GENERAL_ID.ID1 ? 0 : 18;
         this.fillBackBoardFields(d[PARAM.GAME_FIELDS]);
       });
     });
@@ -87,7 +88,9 @@ export class GameComponent implements OnInit, OnDestroy {
 
     const mepleChangeSubscription = this.socketService.startListeningOn<RMepleChangeData>(DATA_TYPE.MEPLE_CHANGE).subscribe(data => {
       data.forEach(d => {
-        this.playerLastFieldIndex = d[PARAM.MEPLE_FIELD_INDEX];
+        if (this.playerNo === d[PARAM.MEPLE_ID]) {
+          this.playerLastFieldIndex = d[PARAM.MEPLE_FIELD_INDEX];
+        }
         this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage = 'none';
         this.meplesFields[d[PARAM.MEPLE_ID]] = this.boardFields[d[PARAM.MEPLE_FIELD_INDEX]];
         this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage =
@@ -103,7 +106,6 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   private fillRoundItems(roundItems: RMGameUpdateData[PARAM.GAME_ROUND_ITEMS]): void {
-    roundItems
     this.roundItems.forEach((item: HTMLElement, index: number) => {
       item.style.backgroundImage = `url("./assets/graphics/${Math.abs(roundItems[index])}.png")`;
       if (roundItems[index] < 0) {
