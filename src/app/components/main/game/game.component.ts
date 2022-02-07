@@ -16,12 +16,15 @@ enum KEYS {
   ARROW_LEFT = 'ArrowLeft',
   ARROW_RIGHT = 'ArrowRight',
   ARROW_DOWN = 'ArrowDown',
+  ARROW_UP = 'ArrowUp',
+  LOWER_W = 'w',
   LOWER_A = 'a',
-  LOWER_D = 'd',
   LOWER_S = 's',
+  LOWER_D = 'd',
+  UPPER_W = 'W',
   UPPER_A = 'A',
-  UPPER_D = 'D',
   UPPER_S = 'S',
+  UPPER_D = 'D',
   SPACEBAR = ' ',
 }
 
@@ -37,6 +40,8 @@ export class GameComponent implements OnInit, OnDestroy {
   private boardFields: HTMLElement[];
   private meplesFields: HTMLElement[] = [];
   private isPlayerPlaying: boolean = false;
+  private playerNo: number;
+  private playerLastFieldIndex: number;
   private roundItems: HTMLElement[];
   private roundItemsDisabled: HTMLElement[];
 
@@ -56,10 +61,10 @@ export class GameComponent implements OnInit, OnDestroy {
 
     const gameSubscription = this.socketService.startListeningOn<RMGameInitData>(DATA_TYPE.GAME_INIT).subscribe(data => {
       data.forEach(d => {
-        this.isPlayerPlaying = d[PARAM.GAME_PLAYERS].some(player => {
-          if (!player) return false;
-          return player[PARAM.PLAYER_ID] === this.socketService.getPlayerId();
-        });
+        this.playerNo = d[PARAM.GAME_PLAYERS].findIndex(
+          player => player?.[PARAM.PLAYER_ID] === this.socketService.getPlayerId()
+        );
+        this.isPlayerPlaying = this.playerNo > -1;
         this.fillBackBoardFields(d[PARAM.GAME_FIELDS]);
       });
     });
@@ -82,6 +87,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
     const mepleChangeSubscription = this.socketService.startListeningOn<RMepleChangeData>(DATA_TYPE.MEPLE_CHANGE).subscribe(data => {
       data.forEach(d => {
+        this.playerLastFieldIndex = d[PARAM.MEPLE_FIELD_INDEX];
         this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage = 'none';
         this.meplesFields[d[PARAM.MEPLE_ID]] = this.boardFields[d[PARAM.MEPLE_FIELD_INDEX]];
         this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage =
@@ -123,21 +129,99 @@ export class GameComponent implements OnInit, OnDestroy {
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
     if (!this.isPlayerPlaying) return;
-
-    if (event.key === KEYS.ARROW_LEFT || event.key === KEYS.LOWER_A || event.key === KEYS.UPPER_A) {
-      this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
-
-    } else if (event.key === KEYS.ARROW_RIGHT || event.key === KEYS.LOWER_D || event.key === KEYS.UPPER_D) {
-      this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-
-    } else if (event.key === KEYS.SPACEBAR ||
-      event.key === KEYS.ARROW_DOWN ||
-      event.key === KEYS.LOWER_S ||
-      event.key === KEYS.UPPER_S
-    ) {
+    // MY LOVELY WIFE FRIENDLY CONTROLS
+    if (this.isCollect(event)) {
       this.socketService.emitMepleCollect();
+
+    } else if (this.playerLastFieldIndex > 0 && this.playerLastFieldIndex < 8) {
+      if (this.isArrowRight(event))       this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowLeft(event))   this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (this.playerLastFieldIndex > 9 && this.playerLastFieldIndex < 17) {
+      if (this.isArrowDown(event))        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowUp(event))     this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (this.playerLastFieldIndex > 18 && this.playerLastFieldIndex < 26) {
+      if (this.isArrowLeft(event))        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowRight(event))  this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (this.playerLastFieldIndex > 27 && this.playerLastFieldIndex < 35) {
+      if (this.isArrowUp(event))          this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowDown(event))   this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (this.playerLastFieldIndex === 0) {
+      if (this.isArrowRight(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowLeft(event) || this.isArrowDown(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (this.playerLastFieldIndex === 8) {
+      if (this.isArrowRight(event) || this.isArrowDown(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowLeft(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (this.playerLastFieldIndex === 9) {
+      if (this.isArrowDown(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowUp(event) || this.isArrowLeft(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (this.playerLastFieldIndex === 17) {
+      if (this.isArrowDown(event) || this.isArrowLeft(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowUp(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (this.playerLastFieldIndex === 18) {
+      if (this.isArrowLeft(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowRight(event) || this.isArrowUp(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (this.playerLastFieldIndex === 26) {
+      if (this.isArrowLeft(event) || this.isArrowUp(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowRight(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (this.playerLastFieldIndex === 27 ) {
+      if (this.isArrowUp(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowRight(event) || this.isArrowDown(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+    } else if (this.playerLastFieldIndex === 35) {
+      if (this.isArrowUp(event) || this.isArrowRight(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowDown(event))
+        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
     }
+
+    // OLD FASHION CONTROLLS
+    // if (this.isOldFashionCollect(event)) this.socketService.emitMepleCollect();
+    // else if (this.isArrowLeft(event)) this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+    // else if (this.isArrowRight(event)) this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
   }
+
+  private isArrowRight(event: KeyboardEvent): boolean {
+    return event.key === KEYS.ARROW_RIGHT || event.key === KEYS.LOWER_D || event.key === KEYS.UPPER_D
+  }
+  private isArrowLeft(event: KeyboardEvent): boolean {
+    return event.key === KEYS.ARROW_LEFT || event.key === KEYS.LOWER_A || event.key === KEYS.UPPER_A
+  }
+  private isArrowDown(event: KeyboardEvent): boolean {
+    return event.key === KEYS.ARROW_DOWN || event.key === KEYS.LOWER_S || event.key === KEYS.UPPER_S
+  }
+  private isArrowUp(event: KeyboardEvent): boolean {
+    return event.key === KEYS.ARROW_UP || event.key === KEYS.LOWER_W || event.key === KEYS.UPPER_W
+  }
+  private isOldFashionCollect(e: KeyboardEvent): boolean {
+    return e.key === KEYS.SPACEBAR || e.key === KEYS.ARROW_DOWN || e.key === KEYS.LOWER_S || e.key === KEYS.UPPER_S
+  }
+  private isCollect(e: KeyboardEvent): boolean {
+    return e.key === KEYS.SPACEBAR
+  }
+
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
