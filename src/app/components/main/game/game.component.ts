@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";
-import { RMChairChangeData } from "../../../models/response.model";
-import { GENERAL_ID } from "../../../models/types.model";
+import { RMepleChangeData, RMGameInitData } from "../../../models/response.model";
 import { Subscription } from "rxjs";
+import { MOVE_DIRECTION } from "../../../models/types.model";
 
 @Component({
   selector: 'game-component',
@@ -11,50 +11,66 @@ import { Subscription } from "rxjs";
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit, OnDestroy {
-  @Input() chairId: GENERAL_ID;
-
   private subscriptions: Subscription = new Subscription()
 
-  public playerName: string;
-  public playerWin: number;
-  public playerWinstreak: number;
-  public playerLost: number;
-  public playerMaxWinstreak: number;
-  public playerIsReady: boolean;
+  private backBoardFields: HTMLElement[];
+  private boardFields: HTMLElement[];
+  private meplesFields: HTMLElement[] = [];
+  private isPlayerPlaying: boolean = false;
 
   constructor(
+    private el: ElementRef,
     private socketService: SocketService
-  ) {
-    this.resetChair();
-  }
+  ) {}
 
   ngOnInit(): void {
-    const chairSubscription = this.socketService.startListeningOn<RMChairChangeData>(DATA_TYPE.CHAIR_CHANGE).subscribe(data => {
-      data.forEach(d => {
-        if (d[PARAM.CHAIR_ID] !== this.chairId) return;
-        if (!d[PARAM.CHAIR_PLAYER]) {
-          this.resetChair();
-          return;
-        }
+    this.backBoardFields = this.el.nativeElement.querySelector('#back-board-container').querySelectorAll('.field');
+    this.boardFields = this.el.nativeElement.querySelector('#board-container').querySelectorAll('.field');
+    this.meplesFields = [this.boardFields[0], this.boardFields[18]]
 
-        const playerData = d[PARAM.CHAIR_PLAYER];
-        this.playerName = playerData[PARAM.PLAYER_NAME];
-        this.playerWin = playerData[PARAM.PLAYER_WIN_COUNTER];
-        this.playerLost = playerData[PARAM.PLAYER_LOST_COUNTER];
-        this.playerWinstreak = playerData[PARAM.PLAYER_WINSTREAK];
-        this.playerMaxWinstreak = playerData[PARAM.PLAYER_MAX_WINSTREAK];
-        this.playerIsReady = d[PARAM.CHAIR_PLAYER_IS_READY];
+    const gameSubscription = this.socketService.startListeningOn<RMGameInitData>(DATA_TYPE.GAME_INIT).subscribe(data => {
+      data.forEach(d => {
+        this.isPlayerPlaying = d[PARAM.GAME_PLAYERS].some(player => {
+          if (!player) return false;
+          return player[PARAM.PLAYER_ID] === this.socketService.getPlayerId();
+        });
+        console.log(d[PARAM.GAME_FIELDS]);
+        this.fillBackBoardFields(d[PARAM.GAME_FIELDS])
       });
     });
 
-    this.subscriptions.add(chairSubscription);
+    const meplesSubscription = this.socketService.startListeningOn<RMepleChangeData>(DATA_TYPE.MEPLE_CHANGE).subscribe(data => {
+      data.forEach(d => {
+        this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage = 'none';
+        this.meplesFields[d[PARAM.MEPLE_ID]] = this.boardFields[d[PARAM.MEPLE_FIELD_INDEX]]
+        this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage =
+          `url("./assets/graphics/player${d[PARAM.MEPLE_ID]}.png")`;
+      });
+    });
+
+    this.subscriptions.add(gameSubscription);
+    this.subscriptions.add(meplesSubscription);
   }
 
-  private resetChair(): void {
-    this.playerName = '';
-    this.playerWinstreak = 0;
-    this.playerMaxWinstreak = 0;
-    this.playerIsReady = false;
+  private fillBackBoardFields(fields: RMGameInitData[PARAM.GAME_FIELDS]): void {
+    this.backBoardFields.forEach((field: HTMLElement, index: number) => {
+      field.style.backgroundImage = `url("./assets/graphics/${fields[index]}.png")`;
+    })
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (!this.isPlayerPlaying) return;
+
+    if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
+      this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+
+    } else if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') {
+      this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+
+    } else if (event.key === 'ArrowDown' || event.key === 's' || event.key === 'S') {
+      this.socketService.emitMepleCollect();
+    }
   }
 
   ngOnDestroy(): void {

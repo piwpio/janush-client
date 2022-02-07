@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Socket } from "ngx-socket-io";
-import { GATEWAY, PayloadChairPlayerIsReady, PayloadPlayerRegister } from "../models/gateway.model";
+import { GATEWAY } from "../models/gateway.model";
 import { map, filter, Observable } from "rxjs";
 import { ResponseType } from "../models/response.model";
 import { DATA_TYPE, PARAM } from "../models/param.model";
-import { PlayerId } from "../models/types.model";
+import { MOVE_DIRECTION, PlayerId } from "../models/types.model";
 
 @Injectable()
 export class SocketService {
@@ -43,8 +43,10 @@ export class SocketService {
     this.socket.emit(dataKey, data);
   }
 
-  emitPlayerRegister(payload: PayloadPlayerRegister): void {
-    this.emit(GATEWAY.PLAYER_REGISTER, payload);
+  emitPlayerRegister(playerName: string): void {
+    this.emit(GATEWAY.PLAYER_REGISTER, {
+      [PARAM.PLAYER_NAME]: playerName
+    });
   }
 
   emitTableSitTo(): void {
@@ -55,7 +57,18 @@ export class SocketService {
     this.emit(GATEWAY.TABLE_STAND_FROM, {});
   }
 
-  emitChairPlayerIsReady(payload: PayloadChairPlayerIsReady): void {
-    this.emit(GATEWAY.CHAIR_PLAYER_SET_READY, payload);
+  emitChairPlayerIsReady(isReady: boolean): void {
+    this.emit(GATEWAY.CHAIR_PLAYER_SET_READY, {
+      [PARAM.CHAIR_PLAYER_IS_READY]: isReady!
+    });
+  }
+
+  emitMepleMove(direction: MOVE_DIRECTION): void {
+    this.emit(GATEWAY.MEPLE_MOVE, {
+      [PARAM.MEPLE_MOVE_DIRECTION]: direction
+    })
+  }
+  emitMepleCollect(): void {
+    this.emit(GATEWAY.MEPLE_COLLECT, {})
   }
 }

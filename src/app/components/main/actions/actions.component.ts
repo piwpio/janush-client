@@ -76,9 +76,7 @@ export class ActionsComponent implements OnInit, OnDestroy {
   }
 
   toggleReady(): void {
-    this.socketService.emitChairPlayerIsReady({
-      [PARAM.CHAIR_PLAYER_IS_READY]: !this.isPlayerReady
-    });
+    this.socketService.emitChairPlayerIsReady(!this.isPlayerReady);
   }
 
   private getPlayerChair(): RMChairChangeData {

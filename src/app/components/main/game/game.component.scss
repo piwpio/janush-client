@@ -33,25 +33,36 @@ $fieldsContainerSize: $fieldSize * $fieldsInRow;
   height: $fieldSize;
   display: flex;
   justify-content: center;
-  align-items: end;
+  align-items: flex-end;
 
   .field {
     width: 90%;
     height: 90%;
     background-color: lightcyan;
+    background-repeat: no-repeat;
+    background-size: contain;
   }
 }
 
 .fields-right-container {
   transform: rotate(90deg);
+  .field {
+    transform: rotate(-90deg);
+  }
 }
 
 .fields-bottom-container {
   transform: rotate(180deg);
+  .field {
+    transform: rotate(-180deg);
+  }
 }
 
 .fields-left-container {
   transform: rotate(270deg);
+  .field {
+    transform: rotate(-270deg);
+  }
 }
 
 #board-container {
@@ -60,6 +71,10 @@ $fieldsContainerSize: $fieldSize * $fieldsInRow;
   background-color: lightsalmon;
   position: relative;
   display: inline-block;
+
+  .field {
+    transform: rotate(90deg);
+  }
 }
 
 $backBoardContainerSize: 800px;

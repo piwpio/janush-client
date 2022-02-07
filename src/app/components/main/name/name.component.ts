@@ -31,19 +31,10 @@ export class NameComponent implements OnInit, OnDestroy {
     this.subscriptions.add(registerSubscription);
 
     this.formSubmit(Math.random().toString());
-    // this.tableSitTo();
   }
 
   formSubmit(playerName: string): boolean {
-    this.socketService.emitPlayerRegister({
-      [PARAM.PLAYER_NAME]: playerName
-    });
-    return false;
-  }
-
-  // TODO DEBUG
-  tableSitTo(): boolean {
-    this.socketService.emitTableSitTo()
+    this.socketService.emitPlayerRegister(playerName);
     return false;
   }
 

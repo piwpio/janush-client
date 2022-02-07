@@ -8,9 +8,14 @@
       ms: {{ playerMaxWinstreak }}
     </div>
   </div>
-  <div class="player-is-ready-container">
-    <div *ngIf="playerIsReady">R</div>
-    <div *ngIf="!playerIsReady">X</div>
+  <div class="player-is-ready-points-container">
+    <div *ngIf="isGameOn">
+      <div>{{meplePoints}}</div>
+    </div>
+    <div *ngIf="!isGameOn">
+      <div *ngIf="playerIsReady">R</div>
+      <div *ngIf="!playerIsReady">X</div>
+    </div>
   </div>
 </div>
 <div *ngIf="!playerName" class="no-player-container name">

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";
-import { RMChairChangeData } from "../../../models/response.model";
+import { RMChairChangeData, RMepleChangeData, RMGameInitData } from "../../../models/response.model";
 import { GENERAL_ID } from "../../../models/types.model";
 import { Subscription } from "rxjs";
 
@@ -21,6 +21,8 @@ export class ChairComponent implements OnInit, OnDestroy {
   public playerLost: number;
   public playerMaxWinstreak: number;
   public playerIsReady: boolean;
+  public isGameOn: boolean;
+  public meplePoints: number;
 
   constructor(
     private socketService: SocketService
@@ -47,14 +49,34 @@ export class ChairComponent implements OnInit, OnDestroy {
       });
     });
 
+    const gameInitSubscription = this.socketService.startListeningOn<RMGameInitData>(DATA_TYPE.GAME_INIT).subscribe(data => {
+      data.forEach(d => {
+        this.isGameOn = d[PARAM.GAME_IS_ON];
+      });
+    });
+
+    const meplesSubscription = this.socketService.startListeningOn<RMepleChangeData>(DATA_TYPE.MEPLE_CHANGE).subscribe(data => {
+      data.forEach(d => {
+        if (this.chairId === d[PARAM.MEPLE_ID]) {
+          this.meplePoints = d[PARAM.MEPLE_POINTS];
+        }
+      });
+    });
+
     this.subscriptions.add(chairSubscription);
+    this.subscriptions.add(gameInitSubscription);
+    this.subscriptions.add(meplesSubscription);
   }
 
   private resetChair(): void {
     this.playerName = '';
+    this.playerWin = 0;
+    this.playerLost = 0;
     this.playerWinstreak = 0;
     this.playerMaxWinstreak = 0;
     this.playerIsReady = false;
+    this.isGameOn = false;
+    this.meplePoints = 0;
   }
 
   ngOnDestroy(): void {
