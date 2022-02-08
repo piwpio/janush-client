@@ -60,17 +60,15 @@ export class ChairComponent implements OnInit, OnDestroy {
       });
     });
 
+    const gameEndSubscription = this.socketService.startListeningOn<RMGameEndData>(DATA_TYPE.GAME_END).subscribe(() => {
+      this.isGameOn = false;
+    });
+
     const mepleChangeSubscription = this.socketService.startListeningOn<RMepleChangeData>(DATA_TYPE.MEPLE_CHANGE).subscribe(data => {
       data.forEach(d => {
         if (this.chairId === d[PARAM.MEPLE_ID]) {
           this.meplePoints = d[PARAM.MEPLE_POINTS];
         }
-      });
-    });
-
-    const gameEndSubscription = this.socketService.startListeningOn<RMGameEndData>(DATA_TYPE.GAME_END).subscribe(data => {
-      data.forEach(() => {
-        this.isGameOn = false;
       });
     });
 

@@ -10,6 +10,7 @@ import { PARAM } from "../../../models/param.model";
 })
 export class EndGameModalComponent {
   public PARAM = PARAM;
+
   constructor(
     public dialogRef: MatDialogRef<EndGameModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: RMGameEndData,

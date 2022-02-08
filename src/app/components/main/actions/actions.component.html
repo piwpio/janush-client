@@ -1,5 +1,5 @@
 <div *ngIf="isPlayerOnChair" class="actions-container">
-  <button mat-flat-button color="primary" (click)="toggleReady()">{{ isPlayerReady ? 'NOT READY' : 'READY' }}</button>
+  <button *ngIf="!isGameOn" mat-flat-button color="primary" (click)="toggleReady()">{{ isPlayerReady ? 'NOT READY' : 'READY' }}</button>
   <button mat-flat-button (click)="tableStandFrom()">STAND UP</button>
 </div>
 <div *ngIf="!isPlayerOnChair" class="no-actions-container">

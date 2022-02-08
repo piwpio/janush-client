@@ -2,7 +2,8 @@ import { Component, ElementRef, HostListener, OnDestroy, OnInit } from "@angular
 import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";
 import {
-  RMepleChangeData, RMGameEndData,
+  RMepleChangeData,
+  RMGameEndData,
   RMGameInitData,
   RMGameMepleCollectData,
   RMGameUpdateData
@@ -11,6 +12,8 @@ import { Subscription } from "rxjs";
 import { GENERAL_ID, MOVE_DIRECTION } from "../../../models/types.model";
 import { EndGameModalComponent } from "../end-game-modal/end-game-modal.component";
 import { MatDialog } from "@angular/material/dialog";
+import { CONTROL_TYPE, GAME_FIELDS, MOVE_MAX_COOLDOWN } from "../../../models/config.model";
+import { ConfigService } from "../../../services/config.service";
 
 enum KEYS {
   ARROW_LEFT = 'ArrowLeft',
@@ -40,15 +43,22 @@ export class GameComponent implements OnInit, OnDestroy {
   private boardFields: HTMLElement[];
   private meplesFields: HTMLElement[] = [];
   private isPlayerPlaying: boolean = false;
+
   private playerNo: GENERAL_ID;
   private playerLastFieldIndex: number;
+
+  private controlType: CONTROL_TYPE;
+  private canMove: boolean = true;
+  private lastMoveTs: number = 0;
+
   private roundItems: HTMLElement[];
   private roundItemsDisabled: HTMLElement[];
 
   constructor(
     private el: ElementRef,
     private socketService: SocketService,
-    public dialog: MatDialog
+    private dialog: MatDialog,
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +68,7 @@ export class GameComponent implements OnInit, OnDestroy {
     this.roundItems = this.el.nativeElement.querySelectorAll('.round-item');
     this.roundItemsDisabled = this.el.nativeElement.querySelectorAll('.round-item .disabled');
 
+    const controlSubsription = this.configService.onControlTypeChange().subscribe(type => this.controlType = type);
 
     const gameSubscription = this.socketService.startListeningOn<RMGameInitData>(DATA_TYPE.GAME_INIT).subscribe(data => {
       data.forEach(d => {
@@ -65,7 +76,7 @@ export class GameComponent implements OnInit, OnDestroy {
           player => player?.[PARAM.PLAYER_ID] === this.socketService.getPlayerId()
         );
         this.isPlayerPlaying = this.playerNo > -1;
-        this.playerLastFieldIndex = this.playerNo === GENERAL_ID.ID1 ? 0 : 18;
+        this.playerLastFieldIndex = this.playerNo === GENERAL_ID.ID1 ? 0 : GAME_FIELDS / 2;
         this.fillBackBoardFields(d[PARAM.GAME_FIELDS]);
       });
     });
@@ -89,6 +100,8 @@ export class GameComponent implements OnInit, OnDestroy {
     const mepleChangeSubscription = this.socketService.startListeningOn<RMepleChangeData>(DATA_TYPE.MEPLE_CHANGE).subscribe(data => {
       data.forEach(d => {
         if (this.playerNo === d[PARAM.MEPLE_ID]) {
+          this.canMove = true;
+          console.log('canMove true', this.canMove);
           this.playerLastFieldIndex = d[PARAM.MEPLE_FIELD_INDEX];
         }
         this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage = 'none';
@@ -98,6 +111,7 @@ export class GameComponent implements OnInit, OnDestroy {
       });
     });
 
+    this.subscriptions.add(controlSubsription);
     this.subscriptions.add(gameSubscription);
     this.subscriptions.add(gameChangeSubscription);
     this.subscriptions.add(gameMepleCollectSubscription);
@@ -130,79 +144,80 @@ export class GameComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if (!this.isPlayerPlaying) return;
-    // MY LOVELY WIFE FRIENDLY CONTROLS
+    if (!this.isPlayerPlaying || (!this.canMove && this.lastMoveTs + MOVE_MAX_COOLDOWN > Date.now())) return;
+    this.canMove = false;
+    this.lastMoveTs = Date.now();
+    this.controlType === CONTROL_TYPE.LOVELY_WIFEY ? this.moveLovelyWifey(event) : this.moveOldFashion(event);
+  }
+
+  private moveLovelyWifey(event: KeyboardEvent): void {
     if (this.isCollect(event)) {
+      this.canMove = true;
       this.socketService.emitMepleCollect();
 
     } else if (this.playerLastFieldIndex > 0 && this.playerLastFieldIndex < 8) {
-      if (this.isArrowRight(event))       this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowLeft(event))   this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+      if (this.isArrowRight(event))       this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowLeft(event))   this.emitMove(MOVE_DIRECTION.DESC);
 
     } else if (this.playerLastFieldIndex > 9 && this.playerLastFieldIndex < 17) {
-      if (this.isArrowDown(event))        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowUp(event))     this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+      if (this.isArrowDown(event))        this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowUp(event))     this.emitMove(MOVE_DIRECTION.DESC);
 
     } else if (this.playerLastFieldIndex > 18 && this.playerLastFieldIndex < 26) {
-      if (this.isArrowLeft(event))        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowRight(event))  this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+      if (this.isArrowLeft(event))        this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowRight(event))  this.emitMove(MOVE_DIRECTION.DESC);
 
     } else if (this.playerLastFieldIndex > 27 && this.playerLastFieldIndex < 35) {
-      if (this.isArrowUp(event))          this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowDown(event))   this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+      if (this.isArrowUp(event))          this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowDown(event))   this.emitMove(MOVE_DIRECTION.DESC);
 
     } else if (this.playerLastFieldIndex === 0) {
-      if (this.isArrowRight(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowLeft(event) || this.isArrowDown(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+      if (this.isArrowRight(event))                                 this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowLeft(event) || this.isArrowDown(event))  this.emitMove(MOVE_DIRECTION.DESC);
 
     } else if (this.playerLastFieldIndex === 8) {
-      if (this.isArrowRight(event) || this.isArrowDown(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowLeft(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+      if (this.isArrowRight(event) || this.isArrowDown(event))      this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowLeft(event))                             this.emitMove(MOVE_DIRECTION.DESC);
 
     } else if (this.playerLastFieldIndex === 9) {
-      if (this.isArrowDown(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowUp(event) || this.isArrowLeft(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+      if (this.isArrowDown(event))                                  this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowUp(event) || this.isArrowLeft(event))    this.emitMove(MOVE_DIRECTION.DESC);
 
     } else if (this.playerLastFieldIndex === 17) {
-      if (this.isArrowDown(event) || this.isArrowLeft(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowUp(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+      if (this.isArrowDown(event) || this.isArrowLeft(event))       this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowUp(event))                               this.emitMove(MOVE_DIRECTION.DESC);
 
     } else if (this.playerLastFieldIndex === 18) {
-      if (this.isArrowLeft(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowRight(event) || this.isArrowUp(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+      if (this.isArrowLeft(event))                                  this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowRight(event) || this.isArrowUp(event))   this.emitMove(MOVE_DIRECTION.DESC);
 
     } else if (this.playerLastFieldIndex === 26) {
-      if (this.isArrowLeft(event) || this.isArrowUp(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowRight(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
+      if (this.isArrowLeft(event) || this.isArrowUp(event))         this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowRight(event))                            this.emitMove(MOVE_DIRECTION.DESC);
 
     } else if (this.playerLastFieldIndex === 27 ) {
-      if (this.isArrowUp(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowRight(event) || this.isArrowDown(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
-    } else if (this.playerLastFieldIndex === 35) {
-      if (this.isArrowUp(event) || this.isArrowRight(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
-      else if (this.isArrowDown(event))
-        this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
-    }
+      if (this.isArrowUp(event))                                    this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowRight(event) || this.isArrowDown(event)) this.emitMove(MOVE_DIRECTION.DESC);
 
-    // OLD FASHION CONTROLLS
-    // if (this.isOldFashionCollect(event)) this.socketService.emitMepleCollect();
-    // else if (this.isArrowLeft(event)) this.socketService.emitMepleMove(MOVE_DIRECTION.DESC);
-    // else if (this.isArrowRight(event)) this.socketService.emitMepleMove(MOVE_DIRECTION.ASC);
+    } else if (this.playerLastFieldIndex === 35) {
+      if (this.isArrowUp(event) || this.isArrowRight(event))        this.emitMove(MOVE_DIRECTION.ASC);
+      else if (this.isArrowDown(event))                             this.emitMove(MOVE_DIRECTION.DESC);
+    }
+  }
+
+  private moveOldFashion(event: KeyboardEvent): void {
+    if (this.isOldFashionCollect(event)) {
+      this.canMove = true;
+      this.socketService.emitMepleCollect();
+    }
+    else if (this.isArrowLeft(event)) this.emitMove(MOVE_DIRECTION.DESC);
+    else if (this.isArrowRight(event)) this.emitMove(MOVE_DIRECTION.ASC);
+  }
+
+  private emitMove(direction: MOVE_DIRECTION): void {
+    this.canMove = false;
+    console.log('canMove false', this.canMove);
+    this.socketService.emitMepleMove(direction);
   }
 
   private isArrowRight(event: KeyboardEvent): boolean {
@@ -223,7 +238,6 @@ export class GameComponent implements OnInit, OnDestroy {
   private isCollect(e: KeyboardEvent): boolean {
     return e.key === KEYS.SPACEBAR
   }
-
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

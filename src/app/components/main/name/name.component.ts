@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from "@angular/core";
 import { SocketService } from "../../../services/socket.service";
-import { DATA_TYPE, PARAM } from "../../../models/param.model";  0
-import { RMPlayerRegister } from "../../../models/response.model";
+import { DATA_TYPE, PARAM } from "../../../models/param.model";
 import { PlayerFullData } from "../../../models/player.model";
 import { Subscription } from "rxjs";
 

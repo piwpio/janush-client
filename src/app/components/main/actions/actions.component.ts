@@ -1,7 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit } from "@angular/core";
 import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";
-import { RMChairChangeData, RMTableChangeData } from "../../../models/response.model";
+import {
+  RMChairChangeData,
+  RMGameEndData,
+  RMGameInitData,
+  RMTableChangeData
+} from "../../../models/response.model";
 import { Subscription } from "rxjs";
 import { GENERAL_ID } from "../../../models/types.model";
 
@@ -19,6 +24,7 @@ export class ActionsComponent implements OnInit, OnDestroy {
   public isPlayerReady: boolean = false;
   public isAnyChairFree: boolean = false;
   public isPlayerInQueue: boolean = false;
+  public isGameOn: boolean = false;
   public playerQueuePosition: number;
 
   constructor(
@@ -60,8 +66,20 @@ export class ActionsComponent implements OnInit, OnDestroy {
       });
     });
 
+    const gameInitSubscription = this.socketService.startListeningOn<RMGameInitData>(DATA_TYPE.GAME_INIT).subscribe(data => {
+      data.forEach(d => {
+        this.isGameOn = d[PARAM.GAME_IS_ON];
+      });
+    });
+
+    const gameEndSubscription = this.socketService.startListeningOn<RMGameEndData>(DATA_TYPE.GAME_END).subscribe(() => {
+      this.isGameOn = false;
+    });
+
     this.subscriptions.add(chairSubscription);
     this.subscriptions.add(tableSubscription);
+    this.subscriptions.add(gameInitSubscription);
+    this.subscriptions.add(gameEndSubscription);
   }
 
   tableSitTo(): void {

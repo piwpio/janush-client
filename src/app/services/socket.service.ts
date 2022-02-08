@@ -68,6 +68,7 @@ export class SocketService {
       [PARAM.MEPLE_MOVE_DIRECTION]: direction
     })
   }
+
   emitMepleCollect(): void {
     this.emit(GATEWAY.MEPLE_COLLECT, {})
   }
