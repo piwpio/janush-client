@@ -12,7 +12,7 @@ import { Subscription } from "rxjs";
 import { GENERAL_ID, MOVE_DIRECTION } from "../../../models/types.model";
 import { EndGameModalComponent } from "../end-game-modal/end-game-modal.component";
 import { MatDialog } from "@angular/material/dialog";
-import { CONTROL_TYPE, GAME_FIELDS, MOVE_MAX_COOLDOWN } from "../../../models/config.model";
+import { CONTROL_TYPE, GAME_FIELDS, GAME_ITEMS_PER_ROUND, MOVE_MAX_COOLDOWN } from "../../../models/config.model";
 import { ConfigService } from "../../../services/config.service";
 
 enum KEYS {
@@ -71,6 +71,7 @@ export class GameComponent implements OnInit, OnDestroy {
     const controlSubsription = this.configService.onControlTypeChange().subscribe(type => this.controlType = type);
 
     const gameSubscription = this.socketService.startListeningOn<RMGameInitData>(DATA_TYPE.GAME_INIT).subscribe(data => {
+      this.fillRoundItems();
       data.forEach(d => {
         this.playerNo = d[PARAM.GAME_PLAYERS].findIndex(
           player => player?.[PARAM.PLAYER_ID] === this.socketService.getPlayerId()
@@ -101,13 +102,12 @@ export class GameComponent implements OnInit, OnDestroy {
       data.forEach(d => {
         if (this.playerNo === d[PARAM.MEPLE_ID]) {
           this.canMove = true;
-          console.log('canMove true', this.canMove);
           this.playerLastFieldIndex = d[PARAM.MEPLE_FIELD_INDEX];
         }
         this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage = 'none';
         this.meplesFields[d[PARAM.MEPLE_ID]] = this.boardFields[d[PARAM.MEPLE_FIELD_INDEX]];
         this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage =
-          `url("./assets/graphics/player${d[PARAM.MEPLE_ID]}.png")`;
+          `url("./assets/graphics/player${d[PARAM.MEPLE_ID]}${d[PARAM.MEPLE_ID]}.png")`;
       });
     });
 
@@ -119,15 +119,22 @@ export class GameComponent implements OnInit, OnDestroy {
     this.subscriptions.add(mepleChangeSubscription);
   }
 
-  private fillRoundItems(roundItems: RMGameUpdateData[PARAM.GAME_ROUND_ITEMS]): void {
-    this.roundItems.forEach((item: HTMLElement, index: number) => {
-      item.style.backgroundImage = `url("./assets/graphics/${Math.abs(roundItems[index])}.png")`;
-      if (roundItems[index] < 0) {
-        this.roundItemsDisabled[index].style.display = 'block'
-      } else {
-        this.roundItemsDisabled[index].style.display = 'none'
-      }
-    });
+  private fillRoundItems(roundItems: RMGameUpdateData[PARAM.GAME_ROUND_ITEMS] = []): void {
+    if (roundItems.length === GAME_ITEMS_PER_ROUND) {
+      this.roundItems.forEach((item: HTMLElement, index: number) => {
+        item.style.backgroundImage = `url("./assets/graphics/${Math.abs(roundItems[index])}.png")`;
+        if (roundItems[index] < 0) {
+          this.roundItemsDisabled[index].style.display = 'block'
+        } else {
+          this.roundItemsDisabled[index].style.display = 'none'
+        }
+      });
+
+    } else {
+      this.roundItems.forEach((item: HTMLElement) => {
+        item.style.backgroundImage = '';
+      });
+    }
   }
 
   private fillBackBoardFields(fields: RMGameUpdateData[PARAM.GAME_ROUND_ITEMS]): void {
@@ -216,7 +223,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
   private emitMove(direction: MOVE_DIRECTION): void {
     this.canMove = false;
-    console.log('canMove false', this.canMove);
     this.socketService.emitMepleMove(direction);
   }
 

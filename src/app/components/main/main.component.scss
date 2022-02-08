@@ -10,6 +10,8 @@
   position: relative;
   width: calc(var(--backboard-size) + 300px);
   height: calc(var(--backboard-size) + 60px);
+  border-radius: 10px;
+  overflow: hidden;
 
   #left-container {
     width: var(--backboard-size);

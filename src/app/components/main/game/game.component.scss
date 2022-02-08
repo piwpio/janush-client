@@ -38,7 +38,6 @@ $fieldsContainerSize: calc(#{$fieldSize} * #{$fieldsInRow});
   .field {
     width: 90%;
     height: 90%;
-    background-color: lightcyan;
     background-repeat: no-repeat;
     background-size: contain;
   }
@@ -68,7 +67,6 @@ $fieldsContainerSize: calc(#{$fieldSize} * #{$fieldsInRow});
 #board-container {
   height: $boardContainerSize;
   width: $boardContainerSize;
-  background-color: lightsalmon;
   position: relative;
   display: inline-block;
 
@@ -82,7 +80,10 @@ $fieldsContainerPadding: calc((#{$backBoardContainerSize} - #{$boardContainerSiz
 $fieldsContainerPadding2: calc((#{$backBoardContainerSize} - #{$boardContainerSize})/2 - #{$fieldSize});
 
 #back-board-container {
-  background-color: red;
+  // linear-gradient(black, black),
+  background-image: url("../../../../assets/graphics/tile2.png");
+  background-blend-mode: saturation;
+  background-repeat: repeat;
   width: $backBoardContainerSize;
   height: $backBoardContainerSize;
   position: absolute;
@@ -91,38 +92,95 @@ $fieldsContainerPadding2: calc((#{$backBoardContainerSize} - #{$boardContainerSi
     padding-top: $fieldsContainerPadding2;
     padding-left: $fieldsContainerPadding;
     transform-origin: calc(#{$backBoardContainerSize} / 2) calc(#{$backBoardContainerSize} / 2);
+
+    .field-container .field {
+      border: 1px solid black;
+      border-radius: 3px;
+    }
   }
 }
 
 .round-items-container {
   flex-direction: column;
 
-  .round-item {
-    width: calc(#{$fieldSize} * 2);
-    height: calc(#{$fieldSize} * 2);
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-color: yellowgreen;
-    display: inline-block;
+  .power-item-container {
     position: relative;
 
-    .disabled {
-      background-size: contain;
-      display: none;
+    .round-item-container {
+      width: calc(#{$fieldSize} * 2.6);
+      height: calc(#{$fieldSize} * 2.6);
+    }
+
+    .special-offer-container {
+      position: absolute;
+      width: calc(#{$fieldSize} * 2);
+      height: calc(#{$fieldSize} * 1.4);
+      left: calc(#{$fieldSize} * 2 / 2 * -1);
+      top: calc(#{$fieldSize} * 1.4 /2 * -1);
+
+      transform: scale(1) rotate(315deg);
+      .animation-container {
+        width:100%;
+        height: 100%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: heartbeat 1s linear infinite;
+        background-image: url("../../../../assets/graphics/special_offer.png");
+      }
+    }
+
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.5); }
+      100% { transform: scale(1); }
+    }
+  }
+
+  .normal-items-container {
+    display: flex;
+    margin-top: 10px;
+
+    .round-item-container {
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .round-item-container {
+    width: calc(#{$fieldSize} * 1.6);
+    height: calc(#{$fieldSize} * 1.6);
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+
+    .background {
+      background-color: white;
+      opacity: .5;
+      position: absolute;
       width: 100%;
       height: 100%;
-      background-image: url("../../../../assets/graphics/disabled.png");
+      top: 0;
+      left: 0;
     }
-  }
-  .power-item-container {
-    .round-item {
-      width: calc(#{$fieldSize} * 2);
-      height: calc(#{$fieldSize} * 2);
-      background-color: lightgray;
-    }
-  }
-  .round-items-container {
 
+    .round-item {
+      width: 100%;
+      height: 100%;
+      background-repeat: no-repeat;
+      background-size: contain;
+      display: inline-block;
+      position: relative;
+
+      .disabled {
+        background-size: contain;
+        display: none;
+        width: 100%;
+        height: 100%;
+        background-image: url("../../../../assets/graphics/disabled.png");
+      }
+    }
   }
 }
 
