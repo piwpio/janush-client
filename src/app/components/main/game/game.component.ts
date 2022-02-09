@@ -14,6 +14,7 @@ import { EndGameModalComponent } from "../end-game-modal/end-game-modal.componen
 import { MatDialog } from "@angular/material/dialog";
 import { CONTROL_TYPE, GAME_FIELDS, GAME_ITEMS_PER_ROUND, MOVE_MAX_COOLDOWN } from "../../../models/config.model";
 import { ConfigService } from "../../../services/config.service";
+import { MatCheckbox } from "@angular/material/checkbox";
 
 enum KEYS {
   ARROW_LEFT = 'ArrowLeft',
@@ -117,6 +118,11 @@ export class GameComponent implements OnInit, OnDestroy {
     this.subscriptions.add(gameMepleCollectSubscription);
     this.subscriptions.add(gameEndSubscription);
     this.subscriptions.add(mepleChangeSubscription);
+  }
+
+  changeControls(isChecked: boolean, checkbox: MatCheckbox): void {
+    this.controlType = isChecked ? CONTROL_TYPE.OLD_FASHION : CONTROL_TYPE.LOVELY_WIFEY;
+    checkbox._inputElement.nativeElement.blur();
   }
 
   private fillRoundItems(roundItems: RMGameUpdateData[PARAM.GAME_ROUND_ITEMS] = []): void {

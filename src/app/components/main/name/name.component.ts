@@ -32,7 +32,7 @@ export class NameComponent implements OnInit, OnDestroy {
 
     this.subscriptions.add(registerSubscription);
 
-    // this.formSubmit(Math.random().toString());
+    // this.formSubmit(Math.random().toString().substring(0, 10));
   }
 
   formSubmit(playerName: string): boolean {

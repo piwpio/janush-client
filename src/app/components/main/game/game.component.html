@@ -130,3 +130,8 @@
     </div>
   </div>
 </div>
+
+<div class="control-change-container">
+  <mat-checkbox #checkbox color="primary" (change)="changeControls($event.checked, checkbox)"></mat-checkbox>
+  <span matTooltip="Enables old fashion controls (only left/right arrows to move and space to collect)">  ?  </span>
+</div>

@@ -183,3 +183,13 @@ $fieldsContainerPadding2: calc((#{$backBoardContainerSize} - #{$boardContainerSi
   }
 }
 
+.control-change-container {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+
+  span {
+    cursor: pointer;
+  }
+}
+

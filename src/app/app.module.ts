@@ -15,6 +15,8 @@ import { EndGameModalComponent } from "./components/main/end-game-modal/end-game
 import { MatDialogModule } from "@angular/material/dialog";
 import { ConfigService } from "./services/config.service";
 import { ChatComponent } from "./components/main/chat/chat.component";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const config: SocketIoConfig = { url: 'http://192.168.0.192:8080' };
 
@@ -35,7 +37,9 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:8080' };
     SocketIoModule.forRoot(config),
     NoopAnimationsModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCheckboxModule,
+    MatTooltipModule
   ],
   providers: [SocketService, ConfigService],
   bootstrap: [AppComponent]
