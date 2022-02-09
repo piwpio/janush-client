@@ -137,8 +137,9 @@ export class GameComponent implements OnInit, OnDestroy {
       });
 
     } else {
-      this.roundItems.forEach((item: HTMLElement) => {
+      this.roundItems.forEach((item: HTMLElement, index: number) => {
         item.style.backgroundImage = '';
+        this.roundItemsDisabled[index].style.display = 'none'
       });
     }
   }

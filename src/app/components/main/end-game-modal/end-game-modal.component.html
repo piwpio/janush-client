@@ -1,7 +1,9 @@
 <h1 mat-dialog-title>GAME RESULTS</h1>
 <div mat-dialog-content>
-  <div>WINNER: {{ data[PARAM.GAME_WINNER][PARAM.PLAYER_NAME] }} WITH {{ data[PARAM.GAME_WINNER_SCORE] }} POINTS</div>
-  <div>LOSER: {{ data[PARAM.GAME_LOSER][PARAM.PLAYER_NAME] }} WITH {{ data[PARAM.GAME_LOSER_SCORE] }} POINTS</div>
+  <div class="winner">WINNER</div>
+  <div class="player-name">{{ data[PARAM.GAME_WINNER][PARAM.PLAYER_NAME] }}</div>
+  <div class="loser">LOSER</div>
+  <div class="player-name">{{ data[PARAM.GAME_LOSER][PARAM.PLAYER_NAME] }}</div>
 </div>
 <div mat-dialog-actions>
   <button mat-button [matDialogClose]="" cdkFocusInitial>CLOSE</button>

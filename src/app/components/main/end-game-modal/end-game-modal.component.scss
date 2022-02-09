@@ -1,0 +1,19 @@
+.player-name {
+  line-height: 2em;
+  font-size: 1.2em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.winner {
+  color: goldenrod;
+  font-size: 1.8em;
+  text-align: center;
+}
+
+.loser {
+  font-size: 1.2em;
+  margin-top: 20px;
+  color: silver;
+  text-align: center;
+}
