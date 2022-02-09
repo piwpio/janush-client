@@ -14,6 +14,7 @@ import { GameComponent } from "./components/main/game/game.component";
 import { EndGameModalComponent } from "./components/main/end-game-modal/end-game-modal.component";
 import { MatDialogModule } from "@angular/material/dialog";
 import { ConfigService } from "./services/config.service";
+import { ChatComponent } from "./components/main/chat/chat.component";
 
 const config: SocketIoConfig = { url: 'http://192.168.0.192:8080' };
 
@@ -25,6 +26,7 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:8080' };
     ChairComponent,
     ActionsComponent,
     GameComponent,
+    ChatComponent,
     EndGameModalComponent
   ],
   imports: [

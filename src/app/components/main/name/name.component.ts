@@ -3,6 +3,7 @@ import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";
 import { PlayerFullData } from "../../../models/player.model";
 import { Subscription } from "rxjs";
+import { NAME_MAXLENGTH } from "../../../models/config.model";
 
 @Component({
   selector: 'name-component',
@@ -13,6 +14,8 @@ export class NameComponent implements OnInit, OnDestroy {
   @Output() onRegistered: EventEmitter<boolean> = new EventEmitter<boolean>()
 
   private subscriptions: Subscription = new Subscription();
+
+  public NAME_MAXLENGTH = NAME_MAXLENGTH;
 
   constructor(
     private socketService: SocketService
@@ -29,7 +32,7 @@ export class NameComponent implements OnInit, OnDestroy {
 
     this.subscriptions.add(registerSubscription);
 
-    this.formSubmit(Math.random().toString());
+    // this.formSubmit(Math.random().toString());
   }
 
   formSubmit(playerName: string): boolean {

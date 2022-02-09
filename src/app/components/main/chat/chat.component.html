@@ -1,0 +1,13 @@
+<div class="chat-container">
+  <div class="background"></div>
+  <div class="messages-container">
+    <div *ngFor="let message of messages" class="message">
+      <b>{{ message[PARAM.CHAT_PLAYER_NAME] }}:</b> {{ message[PARAM.CHAT_MESSAGE]}}
+    </div>
+  </div>
+  <div class="input-container">
+    <form (submit)="submitMessage(chatInput.value, chatInput)">
+      <input #chatInput type="text" [maxLength]="CHAT_MESSAGE_MAXLENGTH">
+    </form>
+  </div>
+</div>

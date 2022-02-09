@@ -66,10 +66,16 @@ export class SocketService {
   emitMepleMove(direction: MOVE_DIRECTION): void {
     this.emit(GATEWAY.MEPLE_MOVE, {
       [PARAM.MEPLE_MOVE_DIRECTION]: direction
-    })
+    });
   }
 
   emitMepleCollect(): void {
-    this.emit(GATEWAY.MEPLE_COLLECT, {})
+    this.emit(GATEWAY.MEPLE_COLLECT, {});
+  }
+
+  emitChatMessage(message: string): void {
+    this.emit(GATEWAY.CHAT_MESSAGE, {
+      [PARAM.CHAT_MESSAGE]: message
+    });
   }
 }
