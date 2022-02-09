@@ -5,6 +5,16 @@
   background: black;
 }
 
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background-color: black;
+  opacity: .15;
+}
+
 #main-container {
   display: flex;
   position: relative;
@@ -12,6 +22,7 @@
   height: calc(var(--backboard-size) + 60px);
   border-radius: 10px;
   overflow: hidden;
+  background-image: url("../../../assets/graphics/tile2.png");
 
   #left-container {
     width: var(--backboard-size);
@@ -21,7 +32,6 @@
 
     #chairs-container {
       display: flex;
-      background-color: lightcoral;
       width: 100%;
       max-width: 100%;
       position: relative;
@@ -29,7 +39,6 @@
     }
 
     #game-container {
-      background-color: lightgoldenrodyellow;
       flex: 1;
     }
   }
@@ -41,13 +50,11 @@
     flex: 1;
 
     #actions-container {
-      background-color: lightblue;
       width: 100%;
       height: 60px;
     }
 
     #chat-container {
-      background-color: lightpink;
       flex: 1;
       width: 100%;
       overflow-x: hidden;

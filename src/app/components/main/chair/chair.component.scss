@@ -1,15 +1,17 @@
 :host {
   flex: 1;
-  font-size: 1.6em;
+  font-size: var(--font-size);
   min-width: 0;
   overflow: hidden;
-  padding-left: 1em;
+  z-index: 1;
 
   &:last-child {
-    padding-right: 1em;
-
     .player-container {
       flex-direction: row-reverse;
+
+      .is-ready-container {
+        justify-content: end;
+      }
 
       .name, .player-info-container {
         text-align: right;
@@ -32,17 +34,43 @@
   width: 100%;
   height: 100%;
 
-  .player-info-container {
-    text-transform: uppercase;
-    font-size: .6em;
+  .is-ready-container {
+    height: 100%;
+    width: 100px;
+    position: relative;
+    display: flex;
+
+    .janush-image-container {
+      width:80%;
+      height:100%;
+
+      img {
+        height: 100%;
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        filter: grayscale(100%);
+        transition: all 0.5s ease;
+
+        &.is-ready {
+          -webkit-filter: grayscale(0%);
+          -moz-filter: grayscale(0%);
+          filter: grayscale(0%);
+        }
+      }
+    }
   }
 
   .player-name-container {
     min-width: 0;
     flex: 1;
+
+    .player-info-container {
+      text-transform: uppercase;
+      font-size: .6em;
+    }
   }
 
-  .player-is-ready-points-container {
+  .points-container {
     display: flex;
     width: 60px;
     height: 60px;

@@ -81,7 +81,6 @@ $fieldsContainerPadding2: calc((#{$backBoardContainerSize} - #{$boardContainerSi
 
 #back-board-container {
   // linear-gradient(black, black),
-  background-image: url("../../../../assets/graphics/tile2.png");
   background-blend-mode: saturation;
   background-repeat: repeat;
   width: $backBoardContainerSize;
