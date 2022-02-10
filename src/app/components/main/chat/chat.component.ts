@@ -4,6 +4,7 @@ import { DATA_TYPE, PARAM } from "../../../models/param.model";
 import { RMChatChangeData } from "../../../models/response.model";
 import { Subscription } from "rxjs";
 import { CHAT_MESSAGE_MAXLENGTH } from "../../../models/config.model";
+import { CHAT_SYSTEM } from '../../../models/types.model';
 
 @Component({
   selector: 'chat-component',
@@ -16,6 +17,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   public messages: RMChatChangeData[] = [];
   public PARAM = PARAM;
   public CHAT_MESSAGE_MAXLENGTH = CHAT_MESSAGE_MAXLENGTH;
+  public CHAT_SYSTEM = CHAT_SYSTEM;
 
   constructor(
     private socketService: SocketService

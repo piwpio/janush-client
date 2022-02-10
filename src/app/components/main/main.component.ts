@@ -8,7 +8,7 @@ import { GENERAL_ID } from "../../models/types.model";
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent {
-  public GENREAL_ID = GENERAL_ID;
+  public GENERAL_ID = GENERAL_ID;
   public isPlayerRegistered = false;
 
   // TODO DEBUG

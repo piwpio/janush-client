@@ -1,7 +1,8 @@
 <div class="chat-container">
   <div class="background"></div>
   <div class="messages-container">
-    <div *ngFor="let message of messages" class="message">
+    <div *ngFor="let message of messages" class="message"
+         [class.is-system]="CHAT_SYSTEM === message[PARAM.CHAT_PLAYER_NAME]">
       <b>{{ message[PARAM.CHAT_PLAYER_NAME] }}:</b> {{ message[PARAM.CHAT_MESSAGE]}}
     </div>
   </div>

@@ -69,10 +69,9 @@ export class GameComponent implements OnInit, OnDestroy {
     this.roundItems = this.el.nativeElement.querySelectorAll('.round-item');
     this.roundItemsDisabled = this.el.nativeElement.querySelectorAll('.round-item .disabled');
 
-    const controlSubsription = this.configService.onControlTypeChange().subscribe(type => this.controlType = type);
+    const controlSubscription = this.configService.onControlTypeChange().subscribe(type => this.controlType = type);
 
     const gameSubscription = this.socketService.startListeningOn<RMGameInitData>(DATA_TYPE.GAME_INIT).subscribe(data => {
-      this.fillRoundItems();
       data.forEach(d => {
         this.playerNo = d[PARAM.GAME_PLAYERS].findIndex(
           player => player?.[PARAM.PLAYER_ID] === this.socketService.getPlayerId()
@@ -80,6 +79,7 @@ export class GameComponent implements OnInit, OnDestroy {
         this.isPlayerPlaying = this.playerNo > -1;
         this.playerLastFieldIndex = this.playerNo === GENERAL_ID.ID1 ? 0 : GAME_FIELDS / 2;
         this.fillBackBoardFields(d[PARAM.GAME_FIELDS]);
+        this.fillRoundItems(d[PARAM.GAME_ROUND_ITEMS]);
       });
     });
 
@@ -112,7 +112,7 @@ export class GameComponent implements OnInit, OnDestroy {
       });
     });
 
-    this.subscriptions.add(controlSubsription);
+    this.subscriptions.add(controlSubscription);
     this.subscriptions.add(gameSubscription);
     this.subscriptions.add(gameChangeSubscription);
     this.subscriptions.add(gameMepleCollectSubscription);

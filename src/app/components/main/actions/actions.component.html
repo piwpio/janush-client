@@ -9,5 +9,5 @@
           (click)="tableSitTo()">SIT IN QUEUE</button>
   <button *ngIf="isPlayerInQueue && !isAnyChairFree" mat-flat-button color="primary"
           (click)="tableStandFrom()">STAND FROM QUEUE</button>
-  <span *ngIf="playerQueuePosition">QUEUE POSITION: {{ playerQueuePosition }}</span>
+  <span *ngIf="playerQueuePosition">Pos: {{ playerQueuePosition }}</span>
 </div>
