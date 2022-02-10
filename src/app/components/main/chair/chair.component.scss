@@ -49,7 +49,7 @@
         -webkit-filter: grayscale(100%);
         -moz-filter: grayscale(100%);
         filter: grayscale(100%);
-        transition: all 0.5s ease;
+        transition: all 0.1s linear;
 
         &.is-ready {
           -webkit-filter: grayscale(0%);

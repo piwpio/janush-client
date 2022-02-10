@@ -3,21 +3,34 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+  margin: 0 10px;
+
+  & > div {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    & > * {
+      flex: 1;
+    }
+  }
 }
 
 button {
-  min-width:140px;
-  margin-right: 10px;
   &:last-child {
     margin-right: 0;
   }
 }
 
 .actions-container {
-
+  hr {
+    margin: 0;
+    max-width: 4px;
+    height: 10px;
+    outline: none;
+    border: none;
+  }
 }
 
-.no-actions-container {
-
+.no-actions-container > span {
+  text-align: center;
 }
-

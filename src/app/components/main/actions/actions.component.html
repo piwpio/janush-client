@@ -1,13 +1,14 @@
 <div *ngIf="isPlayerOnChair" class="actions-container">
   <button *ngIf="!isGameOn" mat-flat-button color="primary" (click)="toggleReady()">{{ isPlayerReady ? 'NOT READY' : 'READY' }}</button>
-  <button mat-flat-button (click)="tableStandFrom()">STAND UP</button>
+  <hr *ngIf="!isGameOn">
+  <button mat-flat-button (click)="tableStandFrom()">CANCEL</button>
 </div>
 <div *ngIf="!isPlayerOnChair" class="no-actions-container">
   <button *ngIf="isAnyChairFree" mat-flat-button color="primary"
-          (click)="tableSitTo()">SIT ON CHAIR</button>
+          (click)="tableSitTo()">PLAY</button>
   <button *ngIf="!isPlayerInQueue && !isAnyChairFree" mat-flat-button color="primary"
-          (click)="tableSitTo()">SIT IN QUEUE</button>
+          (click)="tableSitTo()">TO QUEUE</button>
   <button *ngIf="isPlayerInQueue && !isAnyChairFree" mat-flat-button color="primary"
-          (click)="tableStandFrom()">STAND FROM QUEUE</button>
-  <span *ngIf="playerQueuePosition">Pos: {{ playerQueuePosition }}</span>
+          (click)="tableStandFrom()">CANCEL</button>
+  <span *ngIf="playerQueuePosition">Queue pos: {{ playerQueuePosition }}</span>
 </div>
