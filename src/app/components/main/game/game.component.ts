@@ -108,7 +108,7 @@ export class GameComponent implements OnInit, OnDestroy {
         this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage = 'none';
         this.meplesFields[d[PARAM.MEPLE_ID]] = this.boardFields[d[PARAM.MEPLE_FIELD_INDEX]];
         this.meplesFields[d[PARAM.MEPLE_ID]].style.backgroundImage =
-          `url("./assets/graphics/player${d[PARAM.MEPLE_ID]}${d[PARAM.MEPLE_ID]}.png")`;
+          `url("./assets/graphics/player${d[PARAM.MEPLE_ID]}.png")`;
       });
     });
 
