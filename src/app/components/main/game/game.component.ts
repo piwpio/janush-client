@@ -29,7 +29,7 @@ enum KEYS {
   UPPER_A = 'A',
   UPPER_S = 'S',
   UPPER_D = 'D',
-  SPACEBAR = ' ',
+  SPACE = ' ',
 }
 
 @Component({
@@ -246,10 +246,10 @@ export class GameComponent implements OnInit, OnDestroy {
     return event.key === KEYS.ARROW_UP || event.key === KEYS.LOWER_W || event.key === KEYS.UPPER_W
   }
   private isOldFashionCollect(e: KeyboardEvent): boolean {
-    return e.key === KEYS.SPACEBAR || e.key === KEYS.ARROW_DOWN || e.key === KEYS.LOWER_S || e.key === KEYS.UPPER_S
+    return e.key === KEYS.SPACE || e.key === KEYS.ARROW_DOWN || e.key === KEYS.LOWER_S || e.key === KEYS.UPPER_S
   }
   private isCollect(e: KeyboardEvent): boolean {
-    return e.key === KEYS.SPACEBAR
+    return e.key === KEYS.SPACE
   }
 
   ngOnDestroy(): void {
