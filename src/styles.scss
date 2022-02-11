@@ -35,12 +35,11 @@ $janush-client-theme: mat.define-light-theme((
 
 /* You can add global styles to this file, and also import other style files */
 @font-face {
-  font-family: Roboto;
+  font-family: "Roboto";
   src: url(/assets/font/Roboto-Regular.ttf);
 }
 
 html, body, app-root, main-component {
-  font-family: Roboto, Arial;
   margin: 0;
   padding: 0;
   width: 100vw;
@@ -48,18 +47,13 @@ html, body, app-root, main-component {
 }
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: "Roboto", "Helvetica Neue", sans-serif;
+}
 
 body {
-  @media (max-height: 860px) {
-    --backboard-size: 600px;
-    --field-size: 46px;
-    --font-size: 1em;
-  }
-  @media (min-height: 861px) {
-    --backboard-size: 800px;
-    --field-size: 60px;
-    --font-size: 1.4em;
-  }
+  --backboard-size: calc(100vmin - 60px - 10px);
+  --field-size: calc(var(--backboard-size) / 13);
 }
 

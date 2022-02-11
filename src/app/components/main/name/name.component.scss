@@ -9,19 +9,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 2em;
   color: white;
   background-color: black;
 
   input {
-    font-size: inherit;
     background-color: black;
     border: 1px solid white;
     caret-color: white;
     color: white;
     outline: none;
     border-radius: 5px;
-    padding: 20px;
+    padding: 2vmin;
+    font-size: 4vmin;
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
 
     &::placeholder {
       color: white;

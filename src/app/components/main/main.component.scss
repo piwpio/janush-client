@@ -18,7 +18,6 @@
 #main-container {
   display: flex;
   position: relative;
-  width: calc(var(--backboard-size) + 300px);
   height: calc(var(--backboard-size) + 60px);
   border-radius: 10px;
   overflow: hidden;
@@ -47,7 +46,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    flex: 1;
+    max-width: 300px;
+    width: calc(100vw - var(--backboard-size) );
 
     #actions-container {
       width: 100%;
@@ -59,6 +59,10 @@
       width: 100%;
       overflow-x: hidden;
       overflow-y: auto;
+    }
+
+    @media (max-width: calc(100vmin - 600px)) {
+      display: none;
     }
   }
 }
