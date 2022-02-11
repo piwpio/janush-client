@@ -1,14 +1,30 @@
-<div class="chat-container">
-  <div class="background"></div>
-  <div class="messages-container">
+<div class="background"></div>
+<div class="messages-container">
+<!--  <div class="messages-inner-container">-->
+    <!--  <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>-->
+    <!--  <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>-->
+    <!--  <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>-->
+    <!--  <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>-->
+    <!--  <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>-->
+    <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>
+    <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>
+    <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>
+    <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>
+    <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>
+    <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>
+    <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>
+    <!--  <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>-->
+    <!--  <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>-->
+    <div class="message">wrrtgr egt retg retg re tgre tgre tg retg retg ret gre tgr etg retg ret gre gr et</div>
     <div *ngFor="let message of messages" class="message"
-         [class.is-system]="CHAT_SYSTEM === message[PARAM.CHAT_PLAYER_NAME]">
+         [class.system]="CHAT_SYSTEM === message[PARAM.CHAT_PLAYER_NAME]">
       <b>{{ message[PARAM.CHAT_PLAYER_NAME] }}:</b> {{ message[PARAM.CHAT_MESSAGE]}}
     </div>
-  </div>
-  <div class="input-container">
-    <form (submit)="submitMessage(chatInput.value, chatInput)">
-      <input #chatInput type="text" [maxLength]="CHAT_MESSAGE_MAXLENGTH">
-    </form>
-  </div>
+<!--  </div>-->
+</div>
+
+<div class="input-container">
+  <form (submit)="submitMessage(chatInput.value, chatInput)">
+    <input #chatInput type="text" [maxLength]="CHAT_MESSAGE_MAXLENGTH">
+  </form>
 </div>
