@@ -10,11 +10,18 @@ import { GENERAL_ID } from "../../models/types.model";
 export class MainComponent {
   public GENERAL_ID = GENERAL_ID;
   public isPlayerRegistered = false;
+  public isDisconnected = false;
 
-  // TODO DEBUG
   constructor(
     private socketService: SocketService
   ) {
+    this.socketService.onDisconnect().subscribe(() => {
+      this.isPlayerRegistered = false;
+      this.isDisconnected = true;
+    });
+    this.socketService.onConnect().subscribe(() => {
+      this.isDisconnected = false;
+    });
     // this.socketService.startDebugListening();
   }
 }

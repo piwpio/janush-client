@@ -1,16 +1,34 @@
 import { Injectable } from "@angular/core";
 import { Socket } from "ngx-socket-io";
 import { GATEWAY } from "../models/gateway.model";
-import { map, filter, Observable } from "rxjs";
+import { map, filter, Observable, Subject, distinctUntilChanged } from "rxjs";
 import { ResponseType } from "../models/response.model";
 import { DATA_TYPE, PARAM } from "../models/param.model";
 import { MOVE_DIRECTION, PlayerId } from "../models/types.model";
 
 @Injectable()
 export class SocketService {
+  private disconnected: Subject<null> = new Subject();
+  private connected: Subject<null> = new Subject();
+
   constructor(
     private socket: Socket
-  ) {}
+  ) {
+    this.socket.ioSocket.on('connect', () => {
+      this.connected.next(null);
+    });
+    this.socket.ioSocket.on('disconnect', () => {
+      this.disconnected.next(null);
+    });
+  }
+
+  onDisconnect(): Observable<any> {
+    return this.disconnected.asObservable();
+  }
+
+  onConnect(): Observable<any> {
+    return this.connected.asObservable();
+  }
 
   getPlayerId(): PlayerId {
     return this.socket.ioSocket.id;

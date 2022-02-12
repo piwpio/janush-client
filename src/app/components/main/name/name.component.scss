@@ -34,4 +34,15 @@
       color: white;
     }
   }
+
+  .disconnected-message {
+    position: absolute;
+    bottom: 40px;
+    padding: 10px;
+    background: indianred;
+    border-radius: 4px;
+    color: white;
+    margin: 10px;
+    font-size: 1em;
+  }
 }

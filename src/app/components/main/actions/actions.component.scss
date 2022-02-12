@@ -16,9 +16,7 @@
 }
 
 button {
-  &:last-child {
-    margin-right: 0;
-  }
+  font-size: min(14px, 2vmin);
 }
 
 .actions-container {

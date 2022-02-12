@@ -1,3 +1,6 @@
 <form (submit)="formSubmit(nameInput.value)">
   <input #nameInput type="text" [maxLength]="NAME_MAXLENGTH" placeholder="Enter your name">
 </form>
+<div *ngIf="isDisconnected" class="disconnected-message">
+  Sorry, your connection was interrupted. Please register again when this message disappeared.
+</div>

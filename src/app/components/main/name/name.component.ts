@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { SocketService } from "../../../services/socket.service";
 import { DATA_TYPE, PARAM } from "../../../models/param.model";
 import { PlayerFullData } from "../../../models/player.model";
@@ -11,6 +11,7 @@ import { NAME_MAXLENGTH } from "../../../models/config.model";
   styleUrls: ['./name.component.scss']
 })
 export class NameComponent implements OnInit, OnDestroy {
+  @Input() isDisconnected: boolean;
   @Output() onRegistered: EventEmitter<boolean> = new EventEmitter<boolean>()
 
   private subscriptions: Subscription = new Subscription();
@@ -36,6 +37,8 @@ export class NameComponent implements OnInit, OnDestroy {
   }
 
   formSubmit(playerName: string): boolean {
+    if (this.isDisconnected) return false;
+
     this.socketService.emitPlayerRegister(playerName);
     return false;
   }

@@ -1,5 +1,6 @@
 <name-component
   *ngIf="!isPlayerRegistered"
+  [isDisconnected]="isDisconnected"
   (onRegistered)="isPlayerRegistered = $event"
 ></name-component>
 
