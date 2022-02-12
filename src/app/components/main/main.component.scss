@@ -46,8 +46,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    max-width: 300px;
-    width: calc(100vw - var(--backboard-size) );
+    //width: 300px;
+    width: 40vh;
 
     #actions-container {
       width: 100%;
@@ -61,7 +61,9 @@
       overflow-y: auto;
     }
 
-    @media (max-width: calc(100vmin - 600px)) {
+    // calc 100vh + 30px is not working in media queries, dont know why...
+    //@media (max-width: calc(100vh + 300px)) {
+    @media (max-width: calc(100vh + 40vh)) {
       display: none;
     }
   }
